@@ -35,6 +35,7 @@ public class GameManager : StateMachine
     public EventMessage eventMessage;
     public TooltipBasic basicTooltip;
     public TooltipTerrain terrainTooltip;
+    public DialogueUI dialogueUI;
 
     public Vector3 menuLocation;
     public GameObject characterPrefab;
@@ -58,6 +59,7 @@ public class GameManager : StateMachine
     public int aestheticMovementSpeed;
     public bool isEndState = false;    // when true signals to stop ongoing actions
     public int turnNumber;
+    private Define.GameMngrAction queuedAction;
 
     
 
@@ -85,6 +87,8 @@ public class GameManager : StateMachine
             JSONDataService jSONDataService = new JSONDataService();
             jSONDataService.SaveData<OverallSettings>(Define.SETTINGSRELATIVEPATH, settings);
         }
+
+        SetState(new NullState(this));
     }
 
     private void OnApplicationQuit()
@@ -95,10 +99,28 @@ public class GameManager : StateMachine
 
     public void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnGenericLeftClick();
+        }
         if (Input.GetMouseButtonDown(1))
         {
             OnCancel();
         }
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            OnReturnPressed();
+        }
+    }
+
+    private void OnReturnPressed()
+    {
+        StartCoroutine(state.SkipButton());
+    }
+
+    private void OnGenericLeftClick()
+    {
+        StartCoroutine(state.LeftClickGeneral());
     }
 
     public void StartLevel()
@@ -107,57 +129,71 @@ public class GameManager : StateMachine
         cameraMovement.OnLevelStart();
         turnNumber = 1;
         isEndState = false;
-        SetState(new LoadLevelState(this));
+        StartStory(Level.startOfLevelStory, Define.GameMngrAction.loadLevel);
     }
 
     public void EndLevel()
     {
-
+        
         levelMapManager.UnloadMap();
         Destroy(background);
-        for (int i = enemyList.Count - 1; i >= 0; i--)
-        {
-            Destroy(enemyList[i].gameObject); // CONSIDER changing this to deal with garbage that may be left over
-            Destroy(enemyList[i]);
-            
-        }
-        for (int i = playerList.Count - 1; i >= 0; i--)
-        {
-            Destroy(playerList[i].gameObject);
-            Destroy(playerList[i]);
-            
-        }
-        for (int i = allyList.Count - 1; i >= 0; i--)
-        {
-            Destroy(allyList[i].gameObject);
-            Destroy(allyList[i]);
-
-        }
-        for (int i = otherList.Count - 1; i >= 0; i--)
-        {
-            Destroy(otherList[i].gameObject);
-            Destroy(otherList[i]);
-
-        }
+        UnloadUnitList(enemyList);
+        UnloadUnitList(playerList);
+        UnloadUnitList(allyList);
+        UnloadUnitList(otherList);
         //precombatPlayerList.Clear();
-        enemyList.Clear();
-        playerList.Clear();
-        allyList.Clear();
-        otherList.Clear();
         battalionList.Clear();
         mapEventsList.Clear();
 
-        playerData.NextLevel();
-
-        // TODO change this to implement inbetween level dialogue?
+        StartStory(Level.endOfLevelStory, Define.GameMngrAction.endLevel);
 
         // TODO implement final level win option -> credits etc
-        StartLevel(); 
-        
+    }
+
+    public void UnloadUnitList(List<UnitController> unitList)
+    {
+        for (int i = unitList.Count - 1; i >= 0; i--)
+        {
+            Destroy(unitList[i].gameObject); // CONSIDER changing this to deal with garbage that may be left over
+            Destroy(unitList[i]);
+        }
+        unitList.Clear();
+    }
+
+    public void StartStory(StorySO storySO, Define.GameMngrAction nextAction)
+    {
+        queuedAction = nextAction;
+        if (storySO == null)
+        {
+            PerformQueuedAction();
+            return;
+        }
+
+        SetState(new StoryState(this));
+        if (state is StoryState storyState)
+        {
+            storyState.InitiateStory(storySO);
+        }
+    }
+
+    public void PerformQueuedAction()
+    {
+        switch (queuedAction)
+        {
+            case Define.GameMngrAction.loadLevel:
+                SetState(new LoadLevelState(this));
+                break;
+            case Define.GameMngrAction.endLevel:
+                playerData.NextLevel();
+                StartLevel();
+                break;
+            default:
+                break;
+        }
+
     }
 
     // statemachine methods - these mostly just call the relevent action in the currecnt state
-    #region "Statemachine Methods"
     public void OnPlayerClicked(UnitController unit)
     {
         StartCoroutine(state.ClickPlayer(unit));
@@ -215,7 +251,6 @@ public class GameManager : StateMachine
     {
         StartCoroutine(state.RightClickUnit(unit));
     }
-    #endregion
 
 
 
@@ -225,7 +260,6 @@ public class GameManager : StateMachine
         StatsScreenManager.DisplayStatsScreen(unit);
     }
 
-    #region "Winning and Losing Methods"
 
     public void CheckForLevelEnd()
     {
@@ -284,7 +318,6 @@ public class GameManager : StateMachine
     }
 
 
-    #endregion
 
     // setup method for creating the enounter, if GameManager gets cluttered, consider moving this to a seperate class?
 

@@ -178,11 +178,11 @@ public class UnitController : MonoBehaviour
 
     // battle methods
 
-    public bool TakeDamage(int damage, int armourPierce)
+    public bool TakeDamage(int damage, int rending)
     {
         // TODO make sure unit is desroyed after moving and animations
-        currentHP -= damage;
-        currentArmour = Mathf.Clamp(currentArmour - armourPierce,0,maxArmour);
+        currentHP = Mathf.Clamp(currentHP - damage, 0, currentHP);
+        currentArmour = Mathf.Clamp(currentArmour - rending,0,maxArmour);
         ActivateBattalion();
         UpdateHealthBar();
         // update display

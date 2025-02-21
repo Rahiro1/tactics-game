@@ -109,7 +109,7 @@ public class BattleManager
         int power = damageDealer.Attack;
         //Debug.Log("Attacking unit attack: " + power.ToString());
         int reduction;
-        int armourPierce = damageDealer.Rending;
+        int rending = damageDealer.Rending;
         int bonusRending = 0;
         int skillThreshold = 0;
 
@@ -128,16 +128,16 @@ public class BattleManager
 
         skillThreshold = (damageDealer.CriticalRate - damageReciever.CriticalAvoid)*100/damageReciever.CriticalAvoid;
         
-        damagedealt = damageDealer.DetermineSkillBonusDamage(damagedealt, armourPierce, skillThreshold, out bonusRending);
+        damagedealt = damageDealer.DetermineSkillBonusDamage(damagedealt, rending, skillThreshold, out bonusRending);
 
-        armourPierce += bonusRending;
+        rending += bonusRending;
 
         //Debug.Log("damage dealt equals " + damagedealt.ToString());
         // use up weapon durability
         damageDealer.OnItemUse(damageDealer.EquippedWeapon);
         
 
-        return damageRecieverUnit.TakeDamage(damagedealt, armourPierce);
+        return damageRecieverUnit.TakeDamage(damagedealt, rending);
 
     }
 

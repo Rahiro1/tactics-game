@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Assets/Story/StorySO")]
 public class StorySO : ScriptableObject
 {
-    List<Define.StoryData> storyDatas;
+    public List<Define.StoryData> storyDatas;
 }

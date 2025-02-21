@@ -15,6 +15,11 @@ public class State
         yield break;
     }
 
+    public virtual IEnumerator LeftClickGeneral()
+    {
+        yield break;
+    }
+
     public virtual IEnumerator ClickPlayer(UnitController unit)
     {
         yield break;
@@ -50,6 +55,11 @@ public class State
         yield break;
     }
 
+    public virtual IEnumerator SkipButton()
+    {
+        yield break;
+    }
+
     public virtual IEnumerator CharaterStatsScreenToggle()
     {
         yield break;
@@ -65,5 +75,9 @@ public class State
         yield break;
     }
 
+    public virtual void OnExitState()
+    {
+        
+    }
 
 }

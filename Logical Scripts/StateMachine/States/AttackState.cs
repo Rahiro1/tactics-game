@@ -29,7 +29,7 @@ public class AttackState : State
         // check player attack range
         //Debug.Log("Click Enemy Attack State");
         UnitController attacker = gameManager.selectedPlayer;
-
+          
         if(gameManager.levelMapManager.GetManhattenDistance(attacker.LocationTile, unit.LocationTile) <= attacker.Character.EquippedWeapon.range)
         {
             OnExitingState();

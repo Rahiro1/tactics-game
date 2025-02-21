@@ -14,6 +14,12 @@ public class Define
     public const string SETTINGSRELATIVEPATH = "/settings.json";
     public const int MASTERVOLUMEDEFAULT = 1;
 
+    public enum GameMngrAction
+    {
+        loadLevel = 0,
+        endLevel = 1
+    }
+
     public enum MenuType
     {
         ExitMenu = 0,
@@ -279,19 +285,23 @@ public class Define
         public AudioClip AudioClip;
     }
 
+    [System.Serializable]
     public struct StoryData
     {
-        DialogueData dialogue;
-        StoryEventSO storyEvent;
+        // just for breaking down the parts of the story in each StorySO
+        public List<DialogueData> dialogueList;
+        public StoryEventSO storyEvent;
     }
 
+    [System.Serializable]
     public struct DialogueData
     {
-        CharacterSO speaker;
-        CharacterSO listenerOne;
-        CharacterSO listenerTwo;
-        CharacterSO listenerThree;
-        string text;
+        public CharacterSO characterOne;
+        public CharacterSO characterTwo;
+        public CharacterSO characterThree;
+        public CharacterSO characterFour;
+        public int speaker;
+        public string text;
         
     }
 

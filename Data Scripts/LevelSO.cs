@@ -14,6 +14,8 @@ public class LevelSO : ScriptableObject
     public int mapHeight;
     public Tilemap tileMap;
     public Tilemap aestheticTilemap;
+    public StorySO startOfLevelStory;
+    public StorySO endOfLevelStory;
     //public int[] enemyLevels;
     //public ClassSO[] enemyList;
     //public Vector3Int[] enemyLocations;

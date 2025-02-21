@@ -8,6 +8,7 @@ public abstract class StateMachine : MonoBehaviour
 
     public void SetState(State state)
     {
+        //CONSIDER - adding onExit for states this.state.OnExitState();
         this.state = state;
         StartCoroutine(this.state.Start());
     }

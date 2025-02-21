@@ -8,7 +8,7 @@ public class TooltipWeapon : MonoBehaviour
 {
     public RectTransform rectTransform;
     public WeaponRankDisplay primaryWeaponRank, secondaryWeaponRank, tertiaryWeaponRank;
-    public TextMeshProUGUI nameText, powerValueText, offenceValueText, defenceValueText, armourPierceValueText, weaponComplexityValueText, rangeValueText, criticalValueText, descriptionText;
+    public TextMeshProUGUI nameText, powerValueText, offenceValueText, defenceValueText, rendingValueText, weaponComplexityValueText, rangeValueText, criticalValueText, descriptionText;
     public Camera cam;
 
     public  void ShowTooltip(Weapon weapon, Vector3 position)
@@ -40,7 +40,7 @@ public class TooltipWeapon : MonoBehaviour
         powerValueText.text = weapon.power.ToString();
         offenceValueText.text = weapon.offence.ToString();
         defenceValueText.text = weapon.defence.ToString();
-        armourPierceValueText.text = weapon.rending.ToString();
+        rendingValueText.text = weapon.rending.ToString();
         weaponComplexityValueText.text = weapon.complexity.ToString();
         rangeValueText.text = weapon.range.ToString();
         criticalValueText.text = weapon.criticalRate.ToString();

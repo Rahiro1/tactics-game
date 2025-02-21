@@ -59,8 +59,16 @@ public class LevelMapManager : MonoBehaviour
         {
             for (int y = 0; y < gridarray.GetLength(1); y++)
             {
-                Destroy(gridarray[x, y].gameObject);
-                Destroy(gridarray[x, y]);
+                if(gridarray[x,y] != null)
+                {
+                    if(gridarray[x,y].gameObject != null)
+                    {
+                        Destroy(gridarray[x, y].gameObject);
+                    }
+                    
+                    Destroy(gridarray[x, y]);
+                }
+                
             }
         }
     }

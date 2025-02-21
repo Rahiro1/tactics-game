@@ -18,7 +18,6 @@ public class AIManager
     }
 
 
-    #region "Control Method"
     public IEnumerator TriggerAI(UnitController thisUnit) // could createw scriptable objects for this
     {
         //Debug.Log("Starting AI");
@@ -44,9 +43,7 @@ public class AIManager
         //Debug.Log("Ai complete");
         yield break;
     }
-    #endregion
 
-    #region "AIType Methods"
     private IEnumerator WaitAI(UnitController thisUnit)
     {
         
@@ -106,7 +103,6 @@ public class AIManager
         }
         yield break;
     }
-    #endregion
 
     #region "Implementation Methods"
     private List<MapTileController> RangedCharge(UnitController thisUnit, UnitController target)
@@ -127,9 +123,11 @@ public class AIManager
 
             foreach (MapTileController tile in range)
             {
+                // if tile is at max weapon range away from target
                 if (lMapManager.GetManhattenDistance(targetTile, tile) == maxWeaponRange)
                 {
-                    if (gameManager.pathfinder.Pathfind(moverTile, tile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value).Count == maxWeaponRange)
+                    //if tile can be pathed to from unit's tile
+                    if (gameManager.pathfinder.Pathfind(moverTile, tile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value).Count > 0)
                     {
                         moveTo = tile;
                         continue;
