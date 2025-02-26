@@ -27,6 +27,7 @@ public class LevelSO : ScriptableObject
     public List<Define.CharacterData> levelCharacterList;   // for characters that start on the map (excluding players)
     public List<ReinforcementSO> reinforcmentList;
     public List<Vector3Int> playerPositions;
+    public List<CharacterSO> newCharacters;
     public List<int> forcedDeployments;
     public List<Define.MapEventData> mapEventList;
     public ShopSO armoury;

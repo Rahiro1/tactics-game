@@ -208,7 +208,7 @@ public class UnitController : MonoBehaviour
         UpdateHealthBar();
     }
 
-    #region "Map Methods
+
     
     public IEnumerator SetPathAndWait(List<MapTileController> path)
     {
@@ -313,7 +313,7 @@ public class UnitController : MonoBehaviour
         return gameManager.rangefinder.GetTilesInAttackRange(Character.EquippedWeapon.range, LocationTile);
     }
 
-    #region "Tile Highlighting Methods"
+
 
     public void DisplayRange()
     {
@@ -382,10 +382,7 @@ public class UnitController : MonoBehaviour
 
         enemyRangeHighlighted = null;
     }
-    #endregion
 
-
-    #endregion
 
     // AI
 
@@ -420,7 +417,7 @@ public class UnitController : MonoBehaviour
         isActivated = true;
     }
 
-    #region "UI"
+
     public void UpdateHealthBar()
     {
         healthbar.maxValue = maxHP;  // make sure this is simple I have comined generic and char versions of this
@@ -440,7 +437,7 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    #endregion
+
 
     public int FindMaxWeaponRange()  // CONSIDER this method could be moved to the character script
     {
@@ -460,7 +457,7 @@ public class UnitController : MonoBehaviour
         return maxWeaponRange;
     }
 
-    #region "Animation Methods"
+
 
     public IEnumerator PlayMapAttackAnimationStart(UnitController defenderUnit)
     {
@@ -537,7 +534,6 @@ public class UnitController : MonoBehaviour
         yield break;
     }
 
-    #endregion
 
 
 }

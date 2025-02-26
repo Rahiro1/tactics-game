@@ -6,10 +6,10 @@ public class ZoneBattalion : Battalion
 {
     private List<Vector3Int> activationZone;
 
-    public ZoneBattalion(List<UnitController> enemyList, int battalionNumber, List<Vector3Int> activationZone) : base(enemyList, battalionNumber)
+    public ZoneBattalion(List<UnitController> enemyList, Define.BattalionData battalionData) : base(enemyList, battalionData)
     {
         battalionOrderType = Define.BattalionOrderType.waitForMapZone;
-        this.activationZone = activationZone;
+        activationZone = battalionData.activationZone;
     }
 
     public override void CheckForActivation()

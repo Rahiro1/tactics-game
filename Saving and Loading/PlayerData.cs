@@ -42,9 +42,9 @@ public class PlayerData
     public Shop currentLevelShop;
 
     // TODO Save/Load/New game
-    #region "Save/Load/Newgame"
     public void NewGame(int file)
     {
+        // CONSIDER moving this elsewhere as this is logic, not data
         playerSaveFile = file;
         // save game 
         playerInventory = new List<Item>();
@@ -57,12 +57,7 @@ public class PlayerData
 
         //  TODO create starting characters currently HARD CODED CONSIDER not hard coding character availability
         PlayerCharacters = new List<Character>();
-        PlayerCharacters.Add(new Character(Database.Instance.CharacterDictionary[0])); // use addplayerchar method
-        PlayerCharacters.Add(new Character(Database.Instance.CharacterDictionary[1]));
-        PlayerCharacters.Add(new Character(Database.Instance.CharacterDictionary[2]));
-        PlayerCharacters.Add(new Character(Database.Instance.CharacterDictionary[3]));
-        PlayerCharacters.Add(new Character(Database.Instance.CharacterDictionary[4]));
-        PlayerCharacters.Add(new Character(Database.Instance.CharacterDictionary[10]));
+        
         RemovedPlayerCharacters = new List<Character>();
 
         // make sure that gameManager and database are loaded on start if running this in a different scene
@@ -88,7 +83,6 @@ public class PlayerData
     {
 
     }
-    #endregion
 
     public void AddPlayerCharacter(Character character)
     {

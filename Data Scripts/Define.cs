@@ -240,11 +240,11 @@ public class Define
     [System.Serializable]
     public struct BattalionData
     {
-        public int BattalionNumber;
+        public int battalionNumber;
         public BattalionOrderType battailionType;
         public int activationTurn;
         public List<Vector3Int> activationZone;
-        public int LeaderID;
+        public int leaderID;
     }
 
     [System.Serializable]

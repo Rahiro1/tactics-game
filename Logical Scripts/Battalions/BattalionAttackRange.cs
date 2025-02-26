@@ -5,7 +5,7 @@ using UnityEngine;
 public class BattalionAttackRange : Battalion
 {
     
-    public BattalionAttackRange(List<UnitController> enemyList, int battalionNumber) : base(enemyList, battalionNumber)
+    public BattalionAttackRange(List<UnitController> enemyList, Define.BattalionData battalionData) : base(enemyList, battalionData)
     {
         battalionOrderType = Define.BattalionOrderType.WaitUntilRange;
     }

@@ -6,12 +6,12 @@ public class BattalionLeaderAttackRange : Battalion
 {
     public UnitController LeaderUnit { get; private set; }
 
-    public BattalionLeaderAttackRange(List<UnitController> enemyList, int battalionNumber, int leaderID) : base(enemyList, battalionNumber)
+    public BattalionLeaderAttackRange(List<UnitController> enemyList, Define.BattalionData battalionData) : base(enemyList, battalionData)
     {
         battalionOrderType = Define.BattalionOrderType.WaitLeaderRange;
         foreach (UnitController unit in GameManager.Instance.enemyList)
         {
-            if (unit.Character.characterID == leaderID)
+            if (unit.Character.characterID == battalionData.leaderID)
             {
                 LeaderUnit = unit;
             }
@@ -67,4 +67,5 @@ public class BattalionLeaderAttackRange : Battalion
 
         return false;
     }
+
 }

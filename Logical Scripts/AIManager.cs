@@ -49,7 +49,7 @@ public class AIManager
         
         UnitController target = DetermineAITargetSmartest(thisUnit, out Weapon weaponChoice);
 
-        yield return gameManager.StartCoroutine(testMethod());
+        //yield return gameManager.StartCoroutine(testMethod());
         yield return gameManager.StartCoroutine(AttackIfInRange(thisUnit, target, weaponChoice));
         yield break;
     }
@@ -84,10 +84,12 @@ public class AIManager
     private IEnumerator ChargeAI(UnitController thisUnit)
     {
         // TODO currently prefers ranged weapons 100% of the time, will need to change to smarter AI
+        Debug.Log("performing charge ai for unit now at " + thisUnit.Location);
         UnitController target = DetermineAITargetSmartest(thisUnit, out Weapon weaponChoice);
+        Debug.Log("target of unit at " + thisUnit.Location + " is " + target.Character.characterName);
         yield return gameManager.StartCoroutine(thisUnit.SetPathAndWait(RangedCharge(thisUnit, target)));
         yield return gameManager.StartCoroutine(AttackIfInRange(thisUnit, target, weaponChoice));
-
+        Debug.Log("performed charge ai for unit now at " + thisUnit.Location);
         yield break;
         
     }
@@ -104,7 +106,7 @@ public class AIManager
         yield break;
     }
 
-    #region "Implementation Methods"
+
     private List<MapTileController> RangedCharge(UnitController thisUnit, UnitController target)
     {
         int maxWeaponRange = thisUnit.FindMaxWeaponRange();
@@ -136,21 +138,23 @@ public class AIManager
             }
             if (moverTile != moveTo)
             {
+                
                 return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value);
             }
             else
             {
+                
                 return MoveSimpleCharge(thisUnit, lMapManager.GetValue(target.Location));
             }
         }
         else
         {
+            
             return new List<MapTileController>();
         }
     }
     private List<MapTileController> MoveSimpleCharge(UnitController thisUnit, MapTileController targetTile)
     {
-
         List<MapTileController> currentPath = new List<MapTileController>();
         List<MapTileController> tempPath;
         MapTileController moverTile = lMapManager.GetValue(thisUnit.Location);
@@ -170,9 +174,12 @@ public class AIManager
 
                 foreach (MapTileController tile in range)
                 {
-                    tempPath = gameManager.pathfinder.Pathfind(tile, targetTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value);
+                    
+                    tempPath = gameManager.pathfinder.Pathfind(tile, targetTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, Define.ENEMYDETECTIONRANGE);
+                    // if the tile is unoccupied and target can be pathed to 
                     if (!tile.occupied && tempPath.Count != 0)
                     {
+                        // if this path is shorter than last
                         if (currentPath.Count == 0 || tempPath.Count < currentPath.Count)
                         {
                             currentPath = tempPath;
@@ -201,9 +208,11 @@ public class AIManager
             targetTile.occupied = true;
             if (moverTile != moveTo)
             {
+                Debug.Log("Move Simple Charge Success for " + thisUnit.Location);
                 return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value);
             } else
             {
+                Debug.Log("Move Simple Charge Failure for " + thisUnit.Location);
                 return new List<MapTileController>();
             }
         }
@@ -456,5 +465,5 @@ public class AIManager
     }
 
     
-    #endregion
+
 }

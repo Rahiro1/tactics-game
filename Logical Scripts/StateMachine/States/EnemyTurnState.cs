@@ -23,6 +23,7 @@ public class EnemyTurnState : State
         for (int i = gameManager.enemyList.Count - 1; i>=0; i--)
         {
             yield return gameManager.StartCoroutine(gameManager.enemyList[i].ImplementAI());
+            gameManager.CheckForLevelEnd();
             if (gameManager.isEndState)
             {
                 yield break;
@@ -32,6 +33,7 @@ public class EnemyTurnState : State
         for (int i = gameManager.allyList.Count - 1; i >= 0; i--)
         {
             yield return gameManager.StartCoroutine(gameManager.allyList[i].ImplementAI());
+            gameManager.CheckForLevelEnd();
             if (gameManager.isEndState)
             {
                 yield break;
@@ -41,6 +43,7 @@ public class EnemyTurnState : State
         for (int i = gameManager.otherList.Count - 1; i >= 0; i--)
         {
             yield return gameManager.StartCoroutine(gameManager.otherList[i].ImplementAI());
+            gameManager.CheckForLevelEnd();
             if (gameManager.isEndState)
             {
                 yield break;

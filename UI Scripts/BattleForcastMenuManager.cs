@@ -168,14 +168,10 @@ public class BattleForcastMenuManager : MonoBehaviour
 
     public void OnAttackButtonClicked()
     {
-
         GameManager gameManager = GameManager.Instance;
         CloseMenu();
         gameManager.mainGameMenuManager.CloseAllMenus();
         gameManager.StartCoroutine(OnAttack());
-        
-
-        
     }
 
     public IEnumerator OnAttack()

@@ -391,30 +391,13 @@ public class GameManager : StateMachine
 
         foreach(UnitController unit in enemyList)
         {
-            if(unit.BattalionNumber == battalion.BattalionNumber)
+            if(unit.BattalionNumber == battalion.battalionNumber)
             {
                 unitsInBattalion.Add(unit);
             }
         }
 
-        switch (battalion.battailionType)
-        {
-            case Define.BattalionOrderType.WaitUntilRange:
-                newBattalion = new BattalionAttackRange(unitsInBattalion, battalion.BattalionNumber);
-                break;
-            case Define.BattalionOrderType.WaitForTurn:
-                newBattalion = new TurnBattalion(unitsInBattalion, battalion.BattalionNumber, battalion.activationTurn);
-                break;
-            case Define.BattalionOrderType.WaitLeaderRange:
-                newBattalion = new BattalionLeaderAttackRange(unitsInBattalion, battalion.BattalionNumber, battalion.LeaderID);
-                break;
-            case Define.BattalionOrderType.waitForMapZone:
-                newBattalion = new ZoneBattalion(unitsInBattalion, battalion.BattalionNumber,battalion.activationZone);
-                break;
-            default:
-                newBattalion = new BattalionAttackRange(unitsInBattalion, battalion.BattalionNumber); // default to Range as it requires the least information
-                break;
-        }
+        newBattalion = Battalion.CreateBattalion(unitsInBattalion, battalion);
 
         battalionList.Add(newBattalion);
     }
@@ -461,51 +444,32 @@ public class GameManager : StateMachine
         unit.UnHighlightEnemyRange();
         if(unit.battalion != null)
         {
-            foreach(Battalion battalion in battalionList)
-            {
-                if(battalion == unit.battalion)
-                {
-                    UnHighlightBattalion(unit);
-                    battalion.battalionUnits.Remove(unit);
-                    
-                }
-            }
+            UnHighlightBattalion(unit);
+            unit.battalion.battalionUnits.Remove(unit);
         }
         Destroy(unit.gameObject);
         unit.IsDestroyed = true;
         levelMapManager.GetValue(unit.Location).RemoveUnit();
-
-        CheckForLevelEnd();
     }
 
     internal void HighlightBattalion(UnitController occupyingUnit)
     {
-        int battalionNumberToCheck = occupyingUnit.Character.battalionNumber;
-
-        foreach(Battalion bat in battalionList)
+        if( occupyingUnit.battalion != null)
         {
-            if(bat.battalionNumber == battalionNumberToCheck)
+            foreach (UnitController unit in occupyingUnit.battalion.battalionUnits)
             {
-                foreach(UnitController unit in bat.battalionUnits)
-                {
-                    levelMapManager.GetValue(unit.Location).Highlight();
-                }
+                levelMapManager.GetValue(unit.Location).Highlight();
             }
         }
     }
 
     internal void UnHighlightBattalion(UnitController occupyingUnit)
     {
-        int battalionNumberToCheck = occupyingUnit.Character.battalionNumber;
-
-        foreach (Battalion bat in battalionList)
+        if (occupyingUnit.battalion != null)
         {
-            if (bat.battalionNumber == battalionNumberToCheck)
+            foreach (UnitController unit in occupyingUnit.battalion.battalionUnits)
             {
-                foreach (UnitController unit in bat.battalionUnits)
-                {
-                    levelMapManager.GetValue(unit.Location).UnHighlight();
-                }
+                levelMapManager.GetValue(unit.Location).UnHighlight();
             }
         }
     }

@@ -11,6 +11,7 @@ public class PlayerTurnState : State
     public override IEnumerator Start()
     {
         gameManager.cameraMovement.EnableCameraPan();
+        gameManager.CheckForLevelEnd();
         return base.Start();
     }
 

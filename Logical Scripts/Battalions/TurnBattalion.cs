@@ -5,10 +5,10 @@ using UnityEngine;
 public class TurnBattalion : Battalion
 {
     public int activationTurn;
-    public TurnBattalion(List<UnitController> enemyList, int battalionNumber, int activationTurn) : base(enemyList, battalionNumber)
+    public TurnBattalion(List<UnitController> enemyList, Define.BattalionData battalionData) : base(enemyList, battalionData)
     {
         battalionOrderType = Define.BattalionOrderType.WaitForTurn;
-        this.activationTurn = activationTurn;
+        activationTurn = battalionData.activationTurn;
     }
 
     //int activationTurn;

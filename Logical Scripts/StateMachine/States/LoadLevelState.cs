@@ -42,6 +42,7 @@ public class LoadLevelState : State
         gameManager.mainCamera.transform.position = new Vector3(centreBounds.x, centreBounds.y, -10);
         gameManager.background = GameObject.Instantiate(level.background, new Vector3(centreBounds.x, centreBounds.y, -5), Quaternion.identity);
 
+        AddNewCharacters(level);
         LoadGenerics(level);
         LoadCharacters(level);
         LoadBattaions(level);
@@ -53,6 +54,14 @@ public class LoadLevelState : State
         gameManager.SetState(new PreCombatState(gameManager));
 
         yield break;
+    }
+
+    private void AddNewCharacters(LevelSO level)
+    {
+        foreach(CharacterSO newCharacter in level.newCharacters)
+        {
+            gameManager.playerData.AddPlayerCharacter(new Character(newCharacter));
+        } 
     }
 
     private void LoadMapEvents(LevelSO level)
