@@ -28,7 +28,7 @@ public class GenericController : UnitController
         enemyRangeHighlighted = null;
         //Debug.Log("Assigning sprite");
         unitSprite.sprite = Character.GetCharacterSprite();
-        currentHP = Character.HP.value;
+        currentHP = Character.HP.GetModifiedValue();
         currentArmour = maxArmour;
         BattalionNumber = unitData.battalionNumber;
         aIType = unitData.AIType;

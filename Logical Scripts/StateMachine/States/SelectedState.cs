@@ -51,9 +51,9 @@ public class SelectedState : State
         MapTileController selected = tileClicked; // Change this
         MapTileController tempPlayer = gameManager.levelMapManager.GetValue(selectedPlayer.Location);
 
-        List<MapTileController> tempPath = gameManager.pathfinder.Pathfind(tempPlayer, selected, selectedCharacter.unitType, selectedCharacter.unitAllignment, selectedCharacter.Move.value);
+        List<MapTileController> tempPath = gameManager.pathfinder.Pathfind(tempPlayer, selected, selectedCharacter.unitType, selectedCharacter.unitAllignment, selectedCharacter.Move.GetbaseValue());
 
-        if (tempPath.Count <= selectedCharacter.Move.value && tempPath.Count !=0) 
+        if (tempPath.Count <= selectedCharacter.Move.GetbaseValue() && tempPath.Count !=0) 
         {
             gameManager.StartCoroutine(selectedPlayer.SetPathAndWait(tempPath));
             //gameManager.menuLocation = tileClicked.transform.position;

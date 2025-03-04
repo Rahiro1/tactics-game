@@ -9,14 +9,36 @@ public class SkillSO : ScriptableObject
     public string skillName;
     public string description;
     public Sprite skillIcon;
+    public Define.SkillTriggerType activationCondition;
+    public Define.SkillTriggerType deactivationCondition;
+    private bool isActive;
     public float RegenerationPercent;
     public float ArmourRegenerationPercent;
     public int RegenerationFlat;
     public int ArmourRegenerationFlat;
 
+    public virtual bool UpdateActivityAndIsChanged(Define.SkillTriggerType skillTriggerType)
+    {
+        if (skillTriggerType == activationCondition)
+        {
+            isActive = true;
+            return true;
+        } else if(skillTriggerType == deactivationCondition)
+        {
+            isActive = false;
+            return true;
+        }
+        return false;
+    }
+
     public virtual bool IsActive(Character thisCharacter)
     {
-        return true;
+        return isActive;
+    }
+
+    public virtual int MaxHpModifier(Character thisCharacter)
+    {
+        return 0;
     }
 
     public virtual int StrengthModifier(Character thisCharacter)
@@ -49,23 +71,73 @@ public class SkillSO : ScriptableObject
         return 0;
     }
 
+    public virtual int MoveModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
     public virtual int ArmourModifier(Character thisCharacter)
     {
         return 0;
     }
 
-    public virtual int MoveModifier(Character thisCharacter)
+    public virtual int AttackModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int OffensiveHitModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int DefensiveHitModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int AvoidModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int CriticalRateModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int CriticalAvoidModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int GuardModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int WieldModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int RendingModifier(Character thisCharacter)
+    {
+        return 0;
+    }
+
+    public virtual int RangeModifier(Character thisCharacter)
     {
         return 0;
     }
 
     public virtual int RegenerationAmount(Character thisCharacter)
     {
-        return RegenerationFlat + Mathf.CeilToInt(thisCharacter.HP.value * RegenerationPercent);
+        return RegenerationFlat + Mathf.CeilToInt(thisCharacter.HP.GetbaseValue() * RegenerationPercent);
     }
     public virtual int ArmourRegenerationAmount(Character thisCharacter)
     {
-        return ArmourRegenerationFlat + Mathf.CeilToInt(thisCharacter.HP.value * ArmourRegenerationPercent);
+        return ArmourRegenerationFlat + Mathf.CeilToInt(thisCharacter.HP.GetbaseValue() * ArmourRegenerationPercent);
     }
 
     public virtual int OffensiveSkillActivationBonus(int damage, int rending, int skillroll, out int newRending)

@@ -11,7 +11,7 @@ public class StatSlider : MonoBehaviour
 
     public void LoadSlider(int unmodifiedStat, int modifiedStat)
     {
-        slider.maxValue = 30;
+        slider.maxValue = Define.MAXSTATSLIDERVALUE;
         slider.value = modifiedStat;
 
         statValueText.text = modifiedStat.ToString();

@@ -27,7 +27,7 @@ public class StatusWindowManager : MonoBehaviour
             battationText.gameObject.SetActive(true);
             battalionValueText.gameObject.SetActive(true);
         }
-        hpValuesText.text = chr.currentHP.ToString() + "/" + chr.HP.value.ToString();
+        hpValuesText.text = chr.currentHP.ToString() + "/" + chr.HP.GetModifiedValue().ToString();
 
         unitImage.sprite = chr.GetCharacterSprite();
 

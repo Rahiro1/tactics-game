@@ -95,35 +95,35 @@ public class UnitController : MonoBehaviour
     {
         get
         {
-            return Character.ModifiedArmour; // re look at these
+            return Character.MaxArmour; // re look at these
         }
     }
     private int maxHP
     {
         get
         {
-            return Character.HP.value; // re look at these
+            return Character.HP.GetModifiedValue(); // re look at these
         }
     }
     private int Strength
     {
         get
         {
-            return Character.ModifiedStrength;
+            return Character.Strength.GetModifiedValue();
         }
     }
     private int Magic
     {
         get
         {
-            return Character.ModifiedMagic;
+            return Character.Magic.GetModifiedValue();
         }
     }
     private int offence
     {
         get
         {
-            return Character.ModifiedOffence;
+            return Character.Offence.GetModifiedValue();
         }
     }
     private int defence;
@@ -156,7 +156,7 @@ public class UnitController : MonoBehaviour
     public void StartOfTurnReset()
     {
         startOfTurnLocation = Location;
-        remainingMovement = Character.Move.value;
+        remainingMovement = Character.Move.GetModifiedValue();
         SetHasActed(false);
     }
 
@@ -168,7 +168,7 @@ public class UnitController : MonoBehaviour
 
         Location = startOfTurnLocation;
         SetPath(new List<MapTileController>());
-        remainingMovement = Character.Move.value;
+        remainingMovement = Character.Move.GetModifiedValue();
         SetHasActed(false);
 
         // make refresh method in playercontroler
@@ -186,6 +186,8 @@ public class UnitController : MonoBehaviour
         ActivateBattalion();
         UpdateHealthBar();
         // update display
+
+        GameEvents.Instance.TriggerSkills(Define.SkillTriggerType.TakeDamage);
 
         if (currentHP <= 0)
         {
@@ -282,7 +284,7 @@ public class UnitController : MonoBehaviour
     public List<MapTileController> GetAttackPlusMoveRange()
     {
         List<MapTileController> attackRangeTiles = gameManager.rangefinder.GetTilesInMoveAndAttackRange(
-            Character.Move.value,
+            Character.Move.GetModifiedValue(),
             FindMaxWeaponRange(),
             LocationTile,
             Character.unitType,
@@ -318,7 +320,7 @@ public class UnitController : MonoBehaviour
     public void DisplayRange()
     {
         moveRange = gameManager.rangefinder.GetTilesInRangeMoveCost(
-           Character.Move.value,
+           Character.Move.GetModifiedValue(),
            gameManager.levelMapManager.GetValue(Location),
            Character.unitType,
            Character.unitAllignment);

@@ -10,12 +10,12 @@ public class BasicStatsDisplay : MonoBehaviour
 
     public void LoadMenu(Character character)
     {
-        strengthSlider.LoadSlider(character.UnmodifiedStrength.value, character.ModifiedStrength);
-        magicSlider.LoadSlider(character.UnmodifiedMagic.value, character.ModifiedMagic);
-        offenceSlider.LoadSlider(character.UnmodifiedOffence.value, character.ModifiedOffence);
-        defenceSlider.LoadSlider(character.UnmodifiedDefence.value, character.ModifiedDefence);
-        resistanceSlider.LoadSlider(character.UnmodifiedResistance.value, character.ModifiedResistance);
-        speedSlider.LoadSlider(character.UnmodifiedSpeed.value, character.ModifiedSpeed);
-        moveSlider.LoadSlider(character.Move.value, character.Move.value);
+        strengthSlider.LoadSlider(character.Strength.GetbaseValue(), character.Strength.GetModifiedValue());
+        magicSlider.LoadSlider(character.Magic.GetbaseValue(), character.Magic.GetModifiedValue());
+        offenceSlider.LoadSlider(character.Offence.GetbaseValue(), character.Offence.GetModifiedValue());
+        defenceSlider.LoadSlider(character.Defence.GetbaseValue(), character.Defence.GetModifiedValue());
+        resistanceSlider.LoadSlider(character.Resistance.GetbaseValue(), character.Resistance.GetModifiedValue());
+        speedSlider.LoadSlider(character.Speed.GetbaseValue(), character.Speed.GetModifiedValue());
+        moveSlider.LoadSlider(character.Move.GetbaseValue(), character.Move.GetModifiedValue());
     }
 }

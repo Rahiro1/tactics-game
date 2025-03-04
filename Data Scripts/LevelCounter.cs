@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,6 @@ public class LevelCounter
 
     public Define.WeaponType weaponType; // .none for character level
 
-    public LevelCounter()
-    {
-
-    }
     public LevelCounter(int startingLevel, int startingMastery, Define.WeaponType weaponType)
     {
         Level = startingLevel;
@@ -22,6 +19,8 @@ public class LevelCounter
         this.weaponType = weaponType;
         Experience = 0;
     }
+
+    
 
     public bool GainExperience(int amount)
     {
@@ -43,5 +42,14 @@ public class LevelCounter
     public int GetLevelTimesMastery()
     {
         return Level * MasteryLevel;
+    }
+
+    [JsonConstructor]
+    public LevelCounter(int level, int experience, int masteryLevel, Define.WeaponType weaponType)
+    {
+        Level = level;
+        Experience = experience;
+        MasteryLevel = masteryLevel;
+        this.weaponType = weaponType;
     }
 }

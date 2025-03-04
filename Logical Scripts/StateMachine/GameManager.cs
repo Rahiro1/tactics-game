@@ -134,7 +134,7 @@ public class GameManager : StateMachine
 
     public void EndLevel()
     {
-        
+        GameEvents.Instance.TriggerSkills(Define.SkillTriggerType.LevelEnd);
         levelMapManager.UnloadMap();
         Destroy(background);
         UnloadUnitList(enemyList);
@@ -354,6 +354,7 @@ public class GameManager : StateMachine
             default:
                 break;
         }
+        unit.Character.OnUnitCreated();
         levelMapManager.SetUnit(unitData.position, unit);
     } 
 
@@ -380,7 +381,7 @@ public class GameManager : StateMachine
             default:
                 break;
         }
-
+        unit.Character.OnUnitCreated();
         levelMapManager.SetUnit(mapPosition, unit);
     }
 
@@ -427,15 +428,19 @@ public class GameManager : StateMachine
                 if (IsPermanent)
                 {
                     playerData.RemovePlayerCharacter(unit.Character);
+                    unit.Character.OnUnitDestroyed();
                 }
                 break;
             case Define.UnitAllignment.Enemy:
+                unit.Character.OnUnitDestroyed();
                 enemyList.Remove(unit);
                 break;
             case Define.UnitAllignment.Ally:
+                unit.Character.OnUnitDestroyed();
                 allyList.Remove(unit);
                 break;
             case Define.UnitAllignment.Other:
+                unit.Character.OnUnitDestroyed();
                 otherList.Remove(unit);
                 break;
             default:
@@ -447,6 +452,7 @@ public class GameManager : StateMachine
             UnHighlightBattalion(unit);
             unit.battalion.battalionUnits.Remove(unit);
         }
+        
         Destroy(unit.gameObject);
         unit.IsDestroyed = true;
         levelMapManager.GetValue(unit.Location).RemoveUnit();

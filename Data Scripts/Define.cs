@@ -13,6 +13,8 @@ public class Define
     public const int WEXPMULTPLIER = 5;
     public const string SETTINGSRELATIVEPATH = "/settings.json";
     public const int MASTERVOLUMEDEFAULT = 1;
+    public const int MAXSTATSLIDERVALUE = 30;
+    public const int BASEHITRATEOFHANDDFH = 80;
 
     public enum GameMngrAction
     {
@@ -92,6 +94,16 @@ public class Define
         HeavyBarding=6,
         Hide=7,
         Dragonskin=8
+    }
+
+    public enum SkillTriggerType
+    {
+        BattleStart = 0,
+        BattleEnd = 1,
+        TakeDamage = 2,
+        LevelStart = 3,
+        LevelEnd = 4,
+        None = 5
     }
 
     public enum UnitAllignment

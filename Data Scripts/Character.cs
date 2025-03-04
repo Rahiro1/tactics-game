@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,449 +13,51 @@ public class Character
     public Define.AIType secondaryAIType;
     public Define.UnitType unitType;
     public int battalionNumber;
-    public LevelCounter Level { get; set; }
+    public bool isSubscribedToSkills;
 
     // stats
-    public BaseStat HP { get; set; }
+    private CharacterStats characterStats;
+    public LevelCounter Level { get { return characterStats.Level; } }
     public int currentHP;
-    public BaseStat UnmodifiedStrength { get; set; }
-    public BaseStat UnmodifiedMagic { get; set; }
-    public BaseStat UnmodifiedOffence { get; set; }
-    public BaseStat UnmodifiedDefence { get; set; }
-    public BaseStat UnmodifiedResistance { get; set; }
-    public BaseStat UnmodifiedSpeed { get; set; }
-    public BaseStat Move { get; set; }
     public int currentArmour;
-
-    
-
-    // stats after modifiers
-    public int ModifiedStrength
-    {
-        get
-        {
-            int temp = UnmodifiedStrength.value;
-            if (EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.bonusStrength;
-            }
-            if (EquippedArmour != null)
-            {
-                temp += EquippedArmour.bonusStrength;
-            }
-            foreach (SkillSO skill in GetSkillList())
-            {
-                if (skill.IsActive(this))
-                {
-                    temp += skill.StrengthModifier(this);
-                }
-            }
-
-            return temp;
-        }
-    }
-    public int ModifiedMagic
-    {
-        get
-        {
-            int temp = UnmodifiedMagic.value;
-            if (EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.bonusMagic;
-            }
-            if (EquippedArmour != null)
-            {
-                temp += EquippedArmour.bonusMagic;
-            }
-            foreach (SkillSO skill in GetSkillList())
-            {
-                if (skill.IsActive(this))
-                {
-                    temp += skill.MagicModifier(this);
-                }
-            }
-
-            return temp;
-        }
-    }
-    public int ModifiedOffence
-    {
-        get
-        {
-            int temp = UnmodifiedOffence.value;
-            if(EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.offence;
-            }
-            if(EquippedArmour != null)
-            {
-                temp += EquippedArmour.armourOffence;
-            }
-            temp += Wield;
-
-            foreach (SkillSO skill in GetSkillList())
-            {
-                if (skill.IsActive(this))
-                {
-                    temp += skill.OffenceModifier(this);
-                }
-            }
-
-            return temp;
-        }
-    }
-    public int ModifiedDefence
-    {
-        get
-        {
-            int temp = UnmodifiedDefence.value;
-            if (EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.defence;
-            }
-            if (EquippedArmour != null)
-            {
-                temp += EquippedArmour.armourDefence;
-            }
-            temp += Wield;
-            foreach (SkillSO skill in GetSkillList())
-            {
-                if (skill.IsActive(this))
-                {
-                    temp += skill.DefenceModifier(this);
-                }
-            }
-
-            return temp;
-        }
-    }
-    public int ModifiedResistance
-    {
-        get
-        {
-            int temp = UnmodifiedResistance.value;
-            if (EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.bonusResistance;
-            }
-            if (EquippedArmour != null)
-            {
-                temp += EquippedArmour.bonusResistance;
-            }
-            foreach (SkillSO skill in GetSkillList())
-            {
-                if (skill.IsActive(this))
-                {
-                    temp += skill.ResistanceModifier(this);
-                }
-            }
-
-            return temp;
-        }
-    }
-    public int ModifiedSpeed
-    {
-        get
-        {
-            int temp = UnmodifiedSpeed.value;
-            if (EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.bonusSpeed;
-            }
-            if (EquippedArmour != null)
-            {
-                temp += EquippedArmour.bonusSpeed;
-            }
-            temp += Mathf.FloorToInt(Wield / 2);
-
-
-            foreach (SkillSO skill in GetSkillList())
-            {
-                if (skill.IsActive(this))
-                {
-                    temp += skill.SpeedModifier(this);
-                }
-            }
-
-            return temp;
-        }
-    }
-    public int ModifiedArmour
-    {
-        get
-        {
-            int temp = 0;
-            if (EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.bonusArmour;
-            }
-            if (EquippedArmour != null)
-            {
-                temp += EquippedArmour.armourValue;
-            }
-            foreach (SkillSO skill in GetSkillList())
-            {
-                if (skill.IsActive(this))
-                {
-                    temp += skill.ArmourModifier(this);
-                }
-            }
-
-            return temp;
-        }
-    }
-
-    // derived Stats
-    // TODO add skil modifiers
-    // TODO add constants for multipliers?
-    public int Attack
-    {
-        get
-        {
-            if (EquippedWeapon == null)
-            {
-                return 0; // check that this is correct 
-            }
-            else if (EquippedWeapon.IsMagical)
-            {
-                return ModifiedMagic + EquippedWeapon.power;
-            }
-            else
-            {
-                return ModifiedStrength + EquippedWeapon.power;
-            }
-        }
-    }
-    public int OffensiveHit
-    {
-        get
-        {
-            if (EquippedWeapon != null)
-            {
-                return ModifiedOffence * 4 + 80; //TODO review hitrate specifics
-            }
-            else
-            {
-                return 0;
-            }
-        }
-    }
-    public int DefensiveHit
-    {
-        get
-        {
-            if (EquippedWeapon != null)
-            {
-                return ModifiedDefence * 4 + 80;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-    }
-    public int Avoid
-    {
-        get
-        {
-            return ModifiedSpeed * 3 + ModifiedDefence ;
-        }
-    }
-    public int CriticalRate
-    {
-        get
-        {
-            int temp = 0;
-            temp += Mathf.FloorToInt(ModifiedOffence / 2); 
-            if(EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.criticalRate;
-            }
-            // TODO - add skills that affect crit rate here
-            return temp;
-        }
-    }
-    public int CriticalAvoid
-    {
-        get
-        {
-            return Mathf.Max(ModifiedDefence,1);
-
-        }
-    }
-    public int Guard
-    {
-        get
-        {
-            return Mathf.CeilToInt(ModifiedDefence / 2f) + currentArmour;
-        }
-    }
-
-    public int Wield
-    {
-        // TODO - complete this, changing weapon ranks to make them simpler
-        get
-        {
-            int temp = 0;
-            int wLvl = 0;
-            int armourTemp = 0; 
-
-            if(EquippedWeapon != null)
-            {
-                temp -= EquippedWeapon.complexity;
-
-                wLvl = SelectWeaponLevelType(EquippedWeapon.weaponType).Level;
-                wLvl -= EquippedWeapon.weaponRank;
-
-                if (wLvl >= 0)
-                {
-                    temp += wLvl;
-                }
-                else
-                {
-                    temp += wLvl * 2;
-                }
-
-
-                if(EquippedWeapon.secondaryWeaponType != Define.WeaponType.none)
-                {
-                    wLvl = SelectWeaponLevelType(EquippedWeapon.secondaryWeaponType).Level;
-                    wLvl -= EquippedWeapon.secondaryWeaponRank;
-
-                    if (wLvl >= 0)
-                    {
-                        temp += wLvl;
-                    }
-                    else
-                    {
-                        temp += wLvl * 2;
-                    }
-                }
-                if (EquippedWeapon.tertiaryWeaponType != Define.WeaponType.none)
-                {
-                    wLvl = SelectWeaponLevelType(EquippedWeapon.tertiaryWeaponType).Level;
-                    wLvl -= EquippedWeapon.tertiaryWeaponRank;
-
-                    if (wLvl >= 0)
-                    {
-                        temp += wLvl;
-                    }
-                    else
-                    {
-                        temp += wLvl * 2;
-                    }
-                }
-            }
-            if(EquippedArmour != null)
-            {
-                armourTemp -= EquippedArmour.armourComplexity;
-                wLvl = SelectWeaponLevelType(EquippedArmour.weaponType).Level;
-                wLvl -= EquippedArmour.weaponRank;
-
-                if (wLvl >= 0)
-                {
-                    armourTemp += wLvl;
-                }
-                else
-                {
-                    armourTemp += wLvl * 2;
-                }
-
-                if (EquippedArmour.secondaryWeaponType != Define.WeaponType.none)
-                {
-                    wLvl = SelectWeaponLevelType(EquippedArmour.secondaryWeaponType).Level;
-                    wLvl -= EquippedArmour.secondaryWeaponRank;
-
-                    if (wLvl >= 0)
-                    {
-                        armourTemp += wLvl;
-                    }
-                    else
-                    {
-                        armourTemp += wLvl * 2;
-                    }
-                }
-                if (EquippedArmour.tertiaryWeaponType != Define.WeaponType.none)
-                {
-                    wLvl = SelectWeaponLevelType(EquippedArmour.tertiaryWeaponType).Level;
-                    wLvl -= EquippedArmour.secondaryWeaponRank;
-
-                    if (wLvl >= 0)
-                    {
-                        armourTemp += wLvl;
-                    }
-                    else
-                    {
-                        armourTemp += wLvl * 2;
-                    }
-                }
-
-                if(armourTemp < 0)
-                {
-                    temp += armourTemp;
-                }
-            }
-            if(temp > 5) // TODO - add skill influence here
-            {
-                temp = 5;
-            }
-
-            return temp;
-        }
-    }
-
-    public int Rending
-    {
-        get
-        {
-            int temp = 0;
-            if(EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.rending;
-            }
-            return temp;
-        }
-    }
-
-    public int Range
-    {
-        get
-        {
-            int temp = 0;
-            if (EquippedWeapon != null)
-            {
-                temp += EquippedWeapon.range;
-            }
-            return temp;
-        }
-    }
-
-    // maximum stats
-
-    // growth rates
 
     // equipment
     public Weapon EquippedWeapon { get; set; }
     public Armour EquippedArmour { get; set; }
     public HealingMagic EquippedHeal { get; set; }
-    public List<Item> CharacterInventory = new List<Item>();
+    public List<Item> CharacterInventory = new();
+
+    //skills
+    public List<int> skillIDList { get; set; }
+    private List<SkillSO> skillList;
+
+    // basic stat getters
+    public Stat HP { get { return characterStats.HP; } }
+    public Stat Strength { get { return characterStats.Strength; } }
+    public Stat Magic { get { return characterStats.Magic; } }
+    public Stat Offence { get { return characterStats.Offence; } }
+    public Stat Defence { get { return characterStats.Defence; } }
+    public Stat Resistance { get { return characterStats.Resistance; } }
+    public Stat Speed { get { return characterStats.Speed; } }
+    public Stat Move { get { return characterStats.Move; } }
+
+    // derived stats
+    public int MaxArmour { get { return GetBaseMaxArmour() + characterStats.BonusMaxArmour.GetModifiedValue(); } }
+    public int Attack { get { return GetBaseAttack() + characterStats.BonusAttack.GetModifiedValue(); } }
+    public int OffensiveHit {  get { return GetBaseOffensiveHit() + characterStats.BonusOffensiveHit.GetModifiedValue(); } }
+    public int DefensiveHit { get { return GetBaseDefensiveHit() + characterStats.BonusDefensiveHit.GetModifiedValue(); } }
+    public int Avoid { get { return GetBaseAvoid() + characterStats.BonusAvoid.GetModifiedValue(); } }
+    public int CriticalRate { get { return GetBaseCriticalRate() + characterStats.BonusCriticalRate.GetModifiedValue(); } }
+    public int CriticalAvoid { get { return GetBaseCriticaAvoid() + characterStats.BonusCriticalAvoid.GetModifiedValue(); } }
+    public int Guard { get { return GetBaseGuard() + characterStats.BonusGuard.GetModifiedValue(); } }
+    public int Wield { get { return GetBaseWield() + characterStats.BonusWield.GetModifiedValue(); } }
+    public int Rending { get { return GetBaseRending() + characterStats.BonusRending.GetModifiedValue(); } }
+    public int Range { get { return GetBaseRange() + characterStats.BonusRange.GetModifiedValue(); } }
 
     // weapon ranks
-    public List<LevelCounter> weaponRanks;
-    public LevelCounter swordRank { get; set; }
-    public LevelCounter spearRank { get; set; }
-    public LevelCounter AxeRank { get; set; }
-    public LevelCounter BowRank { get; set; }
-    public LevelCounter ElementalRank { get; set; }
-    public LevelCounter DecayRank { get; set; }
-    public LevelCounter HealRank { get; set; }
-    public LevelCounter armourWeaponRank { get; set; }
-    public LevelCounter CreationRank { get; set; }
+    public List<LevelCounter> WeaponRanks { get { return characterStats.WeaponRanks; } }
 
-    // TODO Add current skills list for character
-
-    public List<int> skillIDList { get; set; }
-    private List<SkillSO> skillList; 
+    
 
     public CharacterSO GetCharacterSO()
     {
@@ -476,21 +79,33 @@ public class Character
         {
             skillList = new List<SkillSO>();
         }
-        if(skillIDList == null)
+        if (skillIDList == null)
         {
             skillIDList = new List<int>();
         }
-        
+
         if (skillList.Count == 0)
-        { 
+        {
             foreach (int skillID in skillIDList)
             {
                 skillList.Add(Database.Instance.skillDictionary[skillID]);
             }
         }
-        
+
 
         return skillList;
+    }
+
+    public Sprite GetCharacterSprite()
+    {
+        if (GetCharacterSO() == null)
+        {
+            return GetClassSO().genericClassSprite;
+        }
+        else
+        {
+            return GetCharacterSO().characterSprite;
+        }
     }
 
     public List<SkillSO> GetAllskills()
@@ -499,7 +114,7 @@ public class Character
 
         temp.AddRange(GetSkillList());
         temp.AddRange(GetClassSO().classSkillList);
-        if(EquippedWeapon != null)
+        if (EquippedWeapon != null)
         {
             temp.AddRange(EquippedWeapon.skillList);
         }
@@ -510,6 +125,120 @@ public class Character
 
         return GetSkillList(); // TODO return ALL skills from this, from class, weapon, etc.
     }
+    public int GetBaseMaxArmour()
+    {
+        return 0;
+    }
+
+    public int GetBaseAttack()
+    {
+        if (EquippedWeapon == null)
+        {
+            return 0;
+        }
+        else if (EquippedWeapon.IsMagical)
+        {
+            return Magic.GetModifiedValue();
+        }
+        else
+        {
+            return Strength.GetModifiedValue();
+        }
+    }
+
+    public int GetBaseOffensiveHit()
+    {
+        if (EquippedWeapon != null)
+        {
+            return Offence.GetModifiedValue() * 4 + Define.BASEHITRATEOFHANDDFH; //TODO review hitrate specifics
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public int GetBaseDefensiveHit()
+    {
+        if (EquippedWeapon != null)
+        {
+            return Defence.GetModifiedValue() * 4 + Define.BASEHITRATEOFHANDDFH;
+        } else
+        {
+            return 0;
+        }
+    }
+
+    public int GetBaseAvoid()
+    {
+        return Speed.GetModifiedValue() * 3 + Defence.GetModifiedValue();
+    }
+
+    public int GetBaseCriticalRate()
+    {
+        return Mathf.FloorToInt(characterStats.Offence.GetModifiedValue() / 2);
+    }
+
+    public int GetBaseCriticaAvoid()
+    {
+        // to avoid divide by zero errors and negative crit rates
+        return Mathf.Max(Defence.GetModifiedValue(), 1);
+    }
+
+    public int GetBaseGuard()
+    {
+        return Mathf.CeilToInt(Defence.GetModifiedValue() / 2f) + currentArmour;
+    }
+
+    public int GetBaseWield()
+    {
+        int temp = 0;
+        int wLvl;
+
+        if (EquippedWeapon != null)
+        {
+            temp -= EquippedWeapon.complexity;
+
+            wLvl = SelectWeaponLevelType(EquippedWeapon.weaponType).Level;
+            wLvl -= EquippedWeapon.weaponRank;
+
+            temp += wLvl >= 0 ? wLvl : wLvl * 2;
+
+            if (EquippedWeapon.secondaryWeaponType != Define.WeaponType.none)
+            {
+                wLvl = SelectWeaponLevelType(EquippedWeapon.secondaryWeaponType).Level;
+                wLvl -= EquippedWeapon.secondaryWeaponRank;
+
+                temp += wLvl >= 0 ? wLvl : wLvl * 2;
+            }
+            if (EquippedWeapon.tertiaryWeaponType != Define.WeaponType.none)
+            {
+                wLvl = SelectWeaponLevelType(EquippedWeapon.tertiaryWeaponType).Level;
+                wLvl -= EquippedWeapon.tertiaryWeaponRank;
+
+                temp += wLvl >= 0 ? wLvl : wLvl * 2;
+            }
+        }
+        if (temp > 5) // TODO - add skill influence here
+        {
+            temp = 5;
+        }
+
+        //TODO - decide on what to do with this complicated stat
+        return temp;
+
+    }
+
+    public int GetBaseRending()
+    {
+        return 0;
+    }
+
+    public int GetBaseRange()
+    {
+        return 0;
+    }
+   
 
     public void AddSkill(SkillSO skill)
     {
@@ -532,25 +261,29 @@ public class Character
             skillIDList.Remove(skill.skillID);
         }
     }
-
-    public Sprite GetCharacterSprite()
+    public void OnTriggerSkill(Define.SkillTriggerType skillTriggerType)
     {
-        if(GetCharacterSO() == null)
+        foreach (SkillSO skill in GetSkillList())
         {
-            return GetClassSO().genericClassSprite;
-        }
-        else
-        {
-            return GetCharacterSO().characterSprite;
-        }
-    }
+            if (skill.UpdateActivityAndIsChanged(skillTriggerType))
+            {
+                if (skill.IsActive(this))
+                {
+                    characterStats.AddModifiersFromSkill(skill, this);
+                }
+                else
+                {
+                    characterStats.RemoveModifiers(skill.skillName);
+                }
+            }
 
-    public Character()  // only used for loading perposes - do not use
-    {
-
+        }
     }
     public Character(CharacterSO character)
     {
+        isSubscribedToSkills = false;
+        OnUnitCreated();
+
         ClassSO startingClass = character.baseClass;
         classID = startingClass.classID;
         // TODO - review character constructor
@@ -562,100 +295,28 @@ public class Character
         secondaryAIType = character.SecondaryAIType;
         battalionNumber = character.battalionNumber;
 
-        // starting stats
-
-        int hp = character.baseHP + startingClass.baseHP;
-        int str = character.baseStrength + startingClass.baseStrength;
-        int mag = character.baseMagic + startingClass.baseMagic;
-        int off = character.baseOffence + startingClass.baseOffence;
-        int def = character.baseDefence + startingClass.baseDefence;
-        int res = character.baseResistance + startingClass.baseResistance;
-        int spd = character.baseSpeed + startingClass.baseSpeed;
-        int mov = character.baseMove + startingClass.baseMove;
-
-        // calculate growths
-
-        int hpGrowth = character.growthHP + startingClass.growthHP;
-        int StrengthGrowth = character.growthStrength + startingClass.growthStrength;
-        int MagicGrowth = character.growthMagic + startingClass.growthMagic;
-        int OffenceGrowth = character.growthOffence + startingClass.growthOffence;
-        int DefenceGrowth = character.growthDefence + startingClass.growthDefence;
-        int ResistanceGrowth = character.growthResistance + startingClass.growthResistance;
-        int SpeedGrowth = character.growthSpeed + startingClass.growthSpeed;
-        int MoveGrowth = 0;
-
-        // calculate max stats
-
-        int MaximumHP = character.maxHP + startingClass.maxHP;
-        int MaxStrength = character.maxStrength + startingClass.maxStrength;
-        int MaxMagic = character.maxMagic + startingClass.maxMagic;
-        int MaxOffence = character.maxOffence + startingClass.maxOffence;
-        int MaxDefence = character.maxDefence + startingClass.maxDefence;
-        int MaxResistance = character.maxResistance + startingClass.maxResistance;
-        int MaxSpeed = character.maxSpeed + startingClass.maxSpeed;
-        int MaxMove = character.maxMove + startingClass.maxMove;
-
-        // assign to unmodified stats
-        HP = new BaseStat(hp, hpGrowth, MaximumHP);
-        UnmodifiedStrength = new BaseStat(str, StrengthGrowth, MaxStrength);
-        UnmodifiedMagic = new BaseStat(mag, MagicGrowth, MaxMagic);
-        UnmodifiedOffence = new BaseStat(off, OffenceGrowth, MaxOffence);
-        UnmodifiedDefence = new BaseStat(def, DefenceGrowth, MaxDefence);
-        UnmodifiedResistance = new BaseStat(res, ResistanceGrowth, MaxResistance);
-        UnmodifiedSpeed = new BaseStat(spd, SpeedGrowth, MaxSpeed);
-        Move = new BaseStat(mov, MoveGrowth, MaxMove);
-
-        Level = new LevelCounter(character.level, 1, Define.WeaponType.none);
-
-        // assign weapon ranks
-        swordRank = new LevelCounter(character.swordRank, character.swordMastery, Define.WeaponType.Sword);
-        spearRank = new LevelCounter(character.spearRank,character.spearMastery, Define.WeaponType.Polearm);
-        AxeRank = new LevelCounter(character.axeRank,character.axeMastery, Define.WeaponType.Axe);
-        BowRank = new LevelCounter(character.bowRank,character.bowMastery, Define.WeaponType.Bow);
-        ElementalRank = new LevelCounter(character.elementalRank,character.elementalMastery, Define.WeaponType.Elemental);
-        DecayRank = new LevelCounter(character.decayRank,character.bowMastery, Define.WeaponType.Decay);
-        HealRank = new LevelCounter(character.healRank,character.healMastery, Define.WeaponType.Healing);
-        armourWeaponRank = new LevelCounter(character.armourWeaponRank,character.armourWeaponMastery, Define.WeaponType.Armour);
-
-        // add to weaponranks list
-        weaponRanks = new List<LevelCounter>();
-        weaponRanks.Add(swordRank);
-        weaponRanks.Add(spearRank);
-        weaponRanks.Add(AxeRank);
-        weaponRanks.Add(BowRank);
-        weaponRanks.Add(ElementalRank);
-        weaponRanks.Add(DecayRank);
-        weaponRanks.Add(HealRank);
-        weaponRanks.Add(armourWeaponRank);
-
-        CreationRank = new LevelCounter(character.creationRank,character.creationMastery, Define.WeaponType.Creation); // TODO - implement creation rank somewhere? 
-        //weaponRanks.Add(swordRank);
+        characterStats = new CharacterStats(character);
 
         // equip weapon, armour and set inventory
         if (character.equippedStartingWeapon != null)
         {
             Weapon tempWeapon = new Weapon(character.equippedStartingWeapon);
-
             if (CanEquipWeapon(tempWeapon))
             {
                 EquipWeapon(tempWeapon);
 
             }
             CharacterInventory.Add(tempWeapon);
-            
         }
 
         if(character.equippedStartingArmour != null)
         {
-            // TODO - implement canEquipArmour function and implent here, as above
             Armour tempArmour = new Armour(character.equippedStartingArmour);
-
             if (CanEquipArmour(tempArmour))
             {
                 EquipArmour(tempArmour);
             }
             CharacterInventory.Add(tempArmour);
-
         }
         
         foreach (ItemSO itemSO in character.startingInventory)
@@ -664,7 +325,6 @@ public class Character
         }
 
         // add skills
-        //TODO - double check assigning skills
         foreach(SkillSO skill in startingClass.classSkillList)
         {
             AddSkill(skill);
@@ -678,7 +338,9 @@ public class Character
 
     public Character(Define.GenericEnemyData unitData) // constructor for genric units including difficulty options to influence stats
     {
-        Level = new LevelCounter(unitData.level, 1, Define.WeaponType.none);
+        isSubscribedToSkills = false;
+        OnUnitCreated();
+
         characterID = -1;
         ClassSO classSO = unitData.unitClass;
         classID = classSO.classID;
@@ -689,104 +351,23 @@ public class Character
         secondaryAIType = unitData.SecondaryAIType; // TODO sort out the relationship between data stored in unitcontroller and char = unitcontroller should contain map specific information
         battalionNumber = unitData.battalionNumber;
 
-        // assign weapon ranks
-        // 
-
-        int weaponScaling = Mathf.FloorToInt(Level.Level / 2);
-
-        swordRank = new LevelCounter(classSO.swordRank + weaponScaling, classSO.swordMastery, Define.WeaponType.Sword); // CONSIDER - add a dificulty option for enemy weapon ranks and implement here
-        spearRank = new LevelCounter(classSO.spearRank + weaponScaling, classSO.spearMastery, Define.WeaponType.Polearm);
-        AxeRank = new LevelCounter(classSO.axeRank + weaponScaling, classSO.axeMastery, Define.WeaponType.Axe);
-        BowRank = new LevelCounter(classSO.bowRank + weaponScaling, classSO.bowMastery, Define.WeaponType.Bow);
-        ElementalRank = new LevelCounter(classSO.elementalRank + weaponScaling, classSO.elementalMastery, Define.WeaponType.Elemental);
-        DecayRank = new LevelCounter(classSO.decayRank + weaponScaling, classSO.decayMastery, Define.WeaponType.Decay);
-        HealRank = new LevelCounter(classSO.healRank + weaponScaling, classSO.healMastery, Define.WeaponType.Healing);
-        armourWeaponRank = new LevelCounter(classSO.armourWeaponRank + weaponScaling, classSO.armourWeaponMastery, Define.WeaponType.Armour);
-        CreationRank = new LevelCounter(classSO.creationRank + weaponScaling, classSO.creationMastery, Define.WeaponType.Creation);
-
-        // add to weaponranks list 
-        weaponRanks = new List<LevelCounter>();
-        weaponRanks.Add(swordRank);
-        weaponRanks.Add(spearRank);
-        weaponRanks.Add(AxeRank);
-        weaponRanks.Add(BowRank);
-        weaponRanks.Add(ElementalRank);
-        weaponRanks.Add(DecayRank);
-        weaponRanks.Add(HealRank);
-        weaponRanks.Add(armourWeaponRank);
-        // TODO - add creation?
-
+        characterStats = new CharacterStats(unitData);
 
         CharacterInventory = new List<Item>(); // is this neccessary?
-        EquippedWeapon = new Weapon(unitData.equippedWeapon);
+        EquipWeapon(new Weapon(unitData.equippedWeapon));
         CharacterInventory.Add(EquippedWeapon);
-        EquippedArmour = new Armour(unitData.equippedArmour);
+        EquipArmour(new Armour(unitData.equippedArmour));
         CharacterInventory.Add(EquippedArmour);
-        //CharacterInventory = unitData.startingInventory;
         foreach (ItemSO itemSO in unitData.startingInventory)
         {
             CharacterInventory.Add(itemSO.CreateItem());
         }
 
         // add skills
-        //TODO - double check assigning skills
         foreach (SkillSO skill in classSO.classSkillList)
         {
             AddSkill(skill);
         }
-
-
-        // TODO add difficulty options and static options class, bool IsTough, bool IsSuperTough, bool IsStrong, bool IsSuperStrong, modifying the below ints
-        int hPDifficultyModifier = 0;
-        int strengthDifficultyModifier =0;
-        int magicDifficultyModifier =0;
-        int offenceDifficultyModifier =0 ;
-        int defenceDifficultyModifier =0;
-        int resistanceDifficultyModifier =0;
-        int speedDifficultyModifier =0;
-
-        // calculate growths
-
-        int hPGrowth = classSO.growthHP + hPDifficultyModifier;
-        int StrengthGrowth = classSO.growthStrength + strengthDifficultyModifier;
-        int MagicGrowth = classSO.growthMagic + magicDifficultyModifier;
-        int OffenceGrowth = classSO.growthOffence + offenceDifficultyModifier;
-        int DefenceGrowth = classSO.growthDefence + defenceDifficultyModifier;
-        int ResistanceGrowth = classSO.growthResistance + resistanceDifficultyModifier;
-        int SpeedGrowth = classSO.growthSpeed + speedDifficultyModifier;
-        int MoveGrowth = 0;
-
-        int MaximumHP = classSO.maxHP;
-        int MaxStrength = classSO.maxStrength;
-        int MaxMagic = classSO.maxMagic;
-        int MaxOffence = classSO.maxOffence;
-        int MaxDefence = classSO.maxDefence;
-        int MaxResistance = classSO.maxResistance;
-        int MaxSpeed = classSO.maxSpeed;
-        int MaxMove = classSO.maxMove;
-
-        // calculax stats
-        int hP = Mathf.Min(classSO.maxHP, Mathf.RoundToInt(classSO.baseHP + (Level.Level-1) * hPGrowth / 100f));
-        int str = Mathf.Min(classSO.maxStrength, Mathf.RoundToInt(classSO.baseStrength + (Level.Level - 1) * StrengthGrowth / 100f));
-        int mag = Mathf.Min(classSO.maxMagic, Mathf.RoundToInt(classSO.baseMagic + (Level.Level - 1) * MagicGrowth / 100f));
-        int off = Mathf.Min(classSO.maxOffence, Mathf.RoundToInt(classSO.baseOffence + (Level.Level - 1) * OffenceGrowth / 100f));
-        int def = Mathf.Min(classSO.maxDefence, Mathf.RoundToInt(classSO.baseDefence + (Level.Level - 1) * DefenceGrowth / 100f));
-        int res = Mathf.Min(classSO.maxResistance, Mathf.RoundToInt(classSO.baseResistance + (Level.Level - 1) * ResistanceGrowth / 100f));
-        int spd = Mathf.Min(classSO.maxSpeed, Mathf.RoundToInt(classSO.baseSpeed + (Level.Level - 1) * SpeedGrowth / 100f));
-        int mov = classSO.baseMove;
-
-        // assign unmodified stats
-
-        HP = new BaseStat(hP, hPGrowth, MaximumHP);
-        UnmodifiedStrength = new BaseStat(str, StrengthGrowth, MaxStrength);
-        UnmodifiedMagic = new BaseStat(mag, MagicGrowth, MaxMagic);
-        UnmodifiedOffence = new BaseStat(off, OffenceGrowth, MaxOffence);
-        UnmodifiedDefence = new BaseStat(def, DefenceGrowth, MaxDefence);
-        UnmodifiedResistance = new BaseStat(res, ResistanceGrowth, MaxResistance);
-        UnmodifiedSpeed = new BaseStat(spd, SpeedGrowth, MaxSpeed);
-        Move = new BaseStat(mov, MoveGrowth, MaxMove);
-
-
     }
 
     private IEnumerator LevelUp()
@@ -794,17 +375,17 @@ public class Character
         // CONSIDER alternate lower-RNG level up method option
         LevelUpScreenManager levelUpScreen = GameManager.Instance.LevelUpScreenManager;
 
-        int hpIncrease =0, strIncrease = 0, magIncrease = 0, offIncrease = 0, defIncrease = 0, resIncrease = 0, spdIncrease = 0;
+        int hpIncrease, strIncrease, magIncrease, offIncrease, defIncrease, resIncrease, spdIncrease;
 
         // increase stats
 
-        hpIncrease = HP.LevelUp();
-        strIncrease = UnmodifiedStrength.LevelUp();
-        magIncrease = UnmodifiedMagic.LevelUp();
-        offIncrease = UnmodifiedOffence.LevelUp();
-        defIncrease = UnmodifiedDefence.LevelUp();
-        resIncrease = UnmodifiedResistance.LevelUp();
-        spdIncrease = UnmodifiedSpeed.LevelUp();
+        hpIncrease = characterStats.HP.LevelUp();
+        strIncrease = characterStats.Strength.LevelUp();
+        magIncrease = characterStats.Magic.LevelUp();
+        offIncrease = characterStats.Offence.LevelUp();
+        defIncrease = characterStats.Defence.LevelUp();
+        resIncrease = characterStats.Resistance.LevelUp();
+        spdIncrease = characterStats.Speed.LevelUp();
 
         // show level- up screen
         yield return GameManager.Instance.StartCoroutine(levelUpScreen.OpenMenu(this, hpIncrease, strIncrease, magIncrease, offIncrease, defIncrease, resIncrease, spdIncrease));
@@ -818,9 +399,28 @@ public class Character
         yield break;
     }
 
-    public void ClassChange()
+    public void OnUnitCreated()
     {
-        // TODO implement Character Class change method
+        if (!isSubscribedToSkills)
+        {
+            GameEvents.Instance.onTriggerSkill += OnTriggerSkill;
+            isSubscribedToSkills = true;
+        }
+
+    }
+    public void OnUnitDestroyed()
+    {
+        if (isSubscribedToSkills)
+        {
+            GameEvents.Instance.onTriggerSkill -= OnTriggerSkill;
+            isSubscribedToSkills = false;
+        }
+
+    }
+
+    public void ClassChange(ClassSO newClass)
+    {
+        characterStats.ClassChange(GetClassSO(), newClass);
     }
 
     // also include method for calculating the amount of experience to be gained
@@ -828,12 +428,10 @@ public class Character
     private IEnumerator GainExperience(int amount)
     {
         // TODO implement max level and possible class change at certain levels+
-        if (Level.GainExperience(amount))
+        if (characterStats.Level.GainExperience(amount))
         {
             yield return GameManager.Instance.StartCoroutine(LevelUp());
         }
-
-        yield return GameManager.Instance.StartCoroutine(testMethod());
 
         yield break;
     }
@@ -882,7 +480,7 @@ public class Character
             // OpenMenu()
         }
 
-        yield return GameManager.Instance.StartCoroutine(GameManager.Instance.expDisplay.OpenMenu(Level, expGainAmount, pWeaponRank, wexpGainAmount, sWeaponRank, wexpGainAmount, tWeaponRank, wexpGainAmount));
+        yield return GameManager.Instance.StartCoroutine(GameManager.Instance.expDisplay.OpenMenu(characterStats.Level, expGainAmount, pWeaponRank, wexpGainAmount, sWeaponRank, wexpGainAmount, tWeaponRank, wexpGainAmount));
 
         
         yield return GameManager.Instance.StartCoroutine(GainExperience(expGainAmount));
@@ -944,11 +542,11 @@ public class Character
     {
         if (unit.IsDestroyed)
         {
-            return (Level.Level - unit.Character.Level.Level + 5) * Define.DESTROYEDENEMYEXPMULTPLIER;
+            return (characterStats.Level.Level - unit.Character.characterStats.Level.Level + 5) * Define.DESTROYEDENEMYEXPMULTPLIER;
         }
         else
         {
-            return Level.Level - unit.Character.Level.Level + 5;
+            return characterStats.Level.Level - unit.Character.characterStats.Level.Level + 5;
         }
     }
 
@@ -999,13 +597,16 @@ public class Character
         if (CanEquipWeapon(weapon))
         {
             EquippedWeapon = weapon;
+            characterStats.AddModifiersFromWeapon(weapon, this);
         }
-        // add equipped weapon to inventory
-        // set equipped weapon to equipped weapon
     }
 
-    public void UnEquipWeapon()     // could equip a fists weapon instead?
+    public void UnEquipWeapon()
     {
+        if(EquippedWeapon != null)
+        {
+            characterStats.RemoveModifiers(EquippedWeapon.ItemName);
+        }
         EquippedWeapon = null;
     }
 
@@ -1014,11 +615,16 @@ public class Character
         if (CanEquipArmour(armour))
         {
             EquippedArmour = armour;
+            characterStats.AddModifiersFromArmour(armour, this);
         }
     }
 
     public void UnEquipArmour()
     {
+        if (EquippedArmour != null)
+        {
+            characterStats.RemoveModifiers(EquippedArmour.ItemName);
+        }
         EquippedArmour = null;
     }
 
@@ -1047,8 +653,6 @@ public class Character
     public void EquipHeal(HealingMagic heal)
     {
         EquippedHeal = heal;
-        // add equipped weapon to inventory
-        // set equipped weapon to equipped weapon
     }
 
     public void AddItemToInventory(Item item)
@@ -1089,34 +693,28 @@ public class Character
         }
     }
 
-    private IEnumerator testMethod()
-    {
-        //Debug.Log("Test method okay"); // TODO - figure out why this method is neccessary
-        yield break;
-    }
-
     private LevelCounter SelectWeaponLevelType(Define.WeaponType weaponType)
     {
         switch (weaponType)
         {
             case Define.WeaponType.Sword:
-                return swordRank;
+                return characterStats.SwordRank;
             case Define.WeaponType.Polearm:
-                return spearRank;
+                return characterStats.SpearRank;
             case Define.WeaponType.Axe:
-                return AxeRank;
+                return characterStats.AxeRank;
             case Define.WeaponType.Bow:
-                return BowRank;
+                return characterStats.BowRank;
             case Define.WeaponType.Elemental:
-                return ElementalRank;
+                return characterStats.ElementalRank;
             case Define.WeaponType.Decay:
-                return DecayRank;
+                return characterStats.DecayRank;
             case Define.WeaponType.Armour:
-                return armourWeaponRank;
+                return characterStats.ArmourWeaponRank;
             case Define.WeaponType.Healing:
-                return HealRank;
+                return characterStats.HealRank;
             case Define.WeaponType.Creation:
-                return CreationRank;
+                return characterStats.CreationRank;
             default:
                 return null;
         }
@@ -1133,7 +731,30 @@ public class Character
         }
 
         return newDamage;
-
     }
 
+    [JsonConstructor]
+    public Character(string characterName, int characterID, int classID, Define.UnitAllignment unitAllignment, Define.AIType AIType, Define.AIType secondaryAIType, Define.UnitType unitType,
+        int battalionNumber, bool isSubscribedToSkills, CharacterStats characterStats, int currentHP, int currentArmour, Weapon EquippedWeapon, Armour EquippedArmour, HealingMagic EquippedHeal,
+        List<Item> CharacterInventory, List<int> skillIDList, List<SkillSO> skillList)  // only used for loading perposes - do not use
+    {
+        this.characterName = characterName;
+        this.characterID = characterID;
+        this.classID = classID;
+        this.unitAllignment = unitAllignment;
+        this.AIType = AIType;
+        this.secondaryAIType = secondaryAIType;
+        this.unitType = unitType;
+        this.battalionNumber = battalionNumber;
+        this.isSubscribedToSkills = isSubscribedToSkills;
+        this.characterStats = characterStats;
+        this.currentHP = currentHP;
+        this.currentArmour = currentArmour;
+        this.EquippedWeapon = EquippedWeapon;
+        this.EquippedArmour = EquippedArmour;
+        this.EquippedHeal = EquippedHeal;
+        this.CharacterInventory =  CharacterInventory;
+        this.skillIDList = skillIDList;
+        this.skillList = skillList;
+}
 }

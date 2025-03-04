@@ -15,25 +15,25 @@ public class LevelUpScreenManager : MonoBehaviour
         levelValueText.text = unit.Level.Level.ToString();
 
         // load stats initial numbers (before increase)
-        hpDisplay.LoadMenu(unit.HP.value, hpIncrease);
-        strDisplay.LoadMenu(unit.UnmodifiedStrength.value, strIncrease);
-        magDisplay.LoadMenu(unit.UnmodifiedMagic.value, magIncrease);
-        offDisplay.LoadMenu(unit.UnmodifiedOffence.value, offIncrease);
-        defDisplay.LoadMenu(unit.UnmodifiedDefence.value, defIncrease);
-        resDisplay.LoadMenu(unit.UnmodifiedResistance.value, resIncrease);
-        spdDisplay.LoadMenu(unit.UnmodifiedSpeed.value, spdIncrease);
+        hpDisplay.LoadMenu(unit.HP.GetbaseValue(), hpIncrease);
+        strDisplay.LoadMenu(unit.Strength.GetbaseValue(), strIncrease);
+        magDisplay.LoadMenu(unit.Magic.GetbaseValue(), magIncrease);
+        offDisplay.LoadMenu(unit.Offence.GetbaseValue(), offIncrease);
+        defDisplay.LoadMenu(unit.Defence.GetbaseValue(), defIncrease);
+        resDisplay.LoadMenu(unit.Resistance.GetbaseValue(), resIncrease);
+        spdDisplay.LoadMenu(unit.Speed.GetbaseValue(), spdIncrease);
 
         gameObject.SetActive(true);
 
         yield return new WaitForSeconds(0.2f);
 
-        yield return StartCoroutine(hpDisplay.IncreaseStat(unit.HP.value, hpIncrease));
-        yield return StartCoroutine(strDisplay.IncreaseStat(unit.UnmodifiedStrength.value, strIncrease));
-        yield return StartCoroutine(magDisplay.IncreaseStat(unit.UnmodifiedMagic.value, magIncrease));
-        yield return StartCoroutine(offDisplay.IncreaseStat(unit.UnmodifiedOffence.value, offIncrease));
-        yield return StartCoroutine(defDisplay.IncreaseStat(unit.UnmodifiedDefence.value, defIncrease));
-        yield return StartCoroutine(resDisplay.IncreaseStat(unit.UnmodifiedResistance.value, resIncrease));
-        yield return StartCoroutine(spdDisplay.IncreaseStat(unit.UnmodifiedSpeed.value, spdIncrease));
+        yield return StartCoroutine(hpDisplay.IncreaseStat(unit.HP.GetbaseValue(), hpIncrease));
+        yield return StartCoroutine(strDisplay.IncreaseStat(unit.Strength.GetbaseValue(), strIncrease));
+        yield return StartCoroutine(magDisplay.IncreaseStat(unit.Magic.GetbaseValue(), magIncrease));
+        yield return StartCoroutine(offDisplay.IncreaseStat(unit.Offence.GetbaseValue(), offIncrease));
+        yield return StartCoroutine(defDisplay.IncreaseStat(unit.Defence.GetbaseValue(), defIncrease));
+        yield return StartCoroutine(resDisplay.IncreaseStat(unit.Resistance.GetbaseValue(), resIncrease));
+        yield return StartCoroutine(spdDisplay.IncreaseStat(unit.Speed.GetbaseValue(), spdIncrease));
 
         yield break;
     }

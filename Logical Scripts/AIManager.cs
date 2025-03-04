@@ -84,12 +84,12 @@ public class AIManager
     private IEnumerator ChargeAI(UnitController thisUnit)
     {
         // TODO currently prefers ranged weapons 100% of the time, will need to change to smarter AI
-        Debug.Log("performing charge ai for unit now at " + thisUnit.Location);
+
         UnitController target = DetermineAITargetSmartest(thisUnit, out Weapon weaponChoice);
-        Debug.Log("target of unit at " + thisUnit.Location + " is " + target.Character.characterName);
+
         yield return gameManager.StartCoroutine(thisUnit.SetPathAndWait(RangedCharge(thisUnit, target)));
         yield return gameManager.StartCoroutine(AttackIfInRange(thisUnit, target, weaponChoice));
-        Debug.Log("performed charge ai for unit now at " + thisUnit.Location);
+
         yield break;
         
     }
@@ -121,7 +121,7 @@ public class AIManager
 
         if (lMapManager.GetManhattenDistance(moverTile, targetTile) != maxWeaponRange)
         {
-            List<MapTileController> range = gameManager.rangefinder.GetTilesInRangeMoveCost(thisUnit.Character.Move.value, moverTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment);
+            List<MapTileController> range = gameManager.rangefinder.GetTilesInRangeMoveCost(thisUnit.Character.Move.GetbaseValue(), moverTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment);
 
             foreach (MapTileController tile in range)
             {
@@ -129,7 +129,7 @@ public class AIManager
                 if (lMapManager.GetManhattenDistance(targetTile, tile) == maxWeaponRange)
                 {
                     //if tile can be pathed to from unit's tile
-                    if (gameManager.pathfinder.Pathfind(moverTile, tile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value).Count > 0)
+                    if (gameManager.pathfinder.Pathfind(moverTile, tile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.GetbaseValue()).Count > 0)
                     {
                         moveTo = tile;
                         continue;
@@ -139,7 +139,7 @@ public class AIManager
             if (moverTile != moveTo)
             {
                 
-                return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value);
+                return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.GetbaseValue());
             }
             else
             {
@@ -166,10 +166,10 @@ public class AIManager
         // if not already adjacent
         if (currentDistance != 1)
         {
-            List<MapTileController> range = gameManager.rangefinder.GetTilesInRangeMoveCost(thisUnit.Character.Move.value, moverTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment);
+            List<MapTileController> range = gameManager.rangefinder.GetTilesInRangeMoveCost(thisUnit.Character.Move.GetbaseValue(), moverTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment);
             // if player can be pathed to
             targetTile.occupied = false;
-            if (gameManager.pathfinder.Pathfind(moverTile, targetTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value).Count != 0)
+            if (gameManager.pathfinder.Pathfind(moverTile, targetTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.GetbaseValue()).Count != 0)
             {
 
                 foreach (MapTileController tile in range)
@@ -209,7 +209,7 @@ public class AIManager
             if (moverTile != moveTo)
             {
                 Debug.Log("Move Simple Charge Success for " + thisUnit.Location);
-                return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value);
+                return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.GetbaseValue());
             } else
             {
                 Debug.Log("Move Simple Charge Failure for " + thisUnit.Location);
@@ -239,13 +239,13 @@ public class AIManager
         {
             
             // if tile can be pathed to
-            if (gameManager.pathfinder.Pathfind(moverTile, targetTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value).Count != 0)
+            if (gameManager.pathfinder.Pathfind(moverTile, targetTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.GetbaseValue()).Count != 0)
             {
                 moveTo = targetTile;
             }
             else
             {
-                List<MapTileController> range = gameManager.rangefinder.GetTilesInRangeMoveCost(thisUnit.Character.Move.value, moverTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment);
+                List<MapTileController> range = gameManager.rangefinder.GetTilesInRangeMoveCost(thisUnit.Character.Move.GetbaseValue(), moverTile, thisUnit.Character.unitType, thisUnit.Character.unitAllignment);
                 // else move to the closest tile by distance 
                 foreach (MapTileController tile in range)
                 {
@@ -264,7 +264,7 @@ public class AIManager
             }
             if (moverTile != moveTo)
             {
-                return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.value);
+                return gameManager.pathfinder.Pathfind(moverTile, moveTo, thisUnit.Character.unitType, thisUnit.Character.unitAllignment, thisUnit.Character.Move.GetbaseValue());
             }
             else
             {

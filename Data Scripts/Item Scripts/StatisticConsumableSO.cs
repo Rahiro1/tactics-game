@@ -22,12 +22,12 @@ public class StatisticConsumableSO : ItemSO
     public override void OnUse(UnitController unit)
     {
         unit.Character.HP.ChangeBaseStatValue(hP);
-        unit.Character.UnmodifiedStrength.ChangeBaseStatValue(strength);
-        unit.Character.UnmodifiedMagic.ChangeBaseStatValue(magic);
-        unit.Character.UnmodifiedOffence.ChangeBaseStatValue(offence);
-        unit.Character.UnmodifiedDefence.ChangeBaseStatValue(defence);
-        unit.Character.UnmodifiedResistance.ChangeBaseStatValue(resistence);
-        unit.Character.UnmodifiedSpeed.ChangeBaseStatValue(speed);
+        unit.Character.Strength.ChangeBaseStatValue(strength);
+        unit.Character.Magic.ChangeBaseStatValue(magic);
+        unit.Character.Offence.ChangeBaseStatValue(offence);
+        unit.Character.Defence.ChangeBaseStatValue(defence);
+        unit.Character.Resistance.ChangeBaseStatValue(resistence);
+        unit.Character.Speed.ChangeBaseStatValue(speed);
         unit.Character.Move.ChangeBaseStatValue(move);
     }
 }

@@ -9,10 +9,12 @@ public class BattleManager
     private WaitForSeconds waitForTenth = new WaitForSeconds(0.1f);
     private WaitForSeconds waitForFifth = new WaitForSeconds(0.2f);
 
+
     public IEnumerator ConductBattle(UnitController attackerUnit, UnitController defenderUnit)
     {
         GameManager gameManager = GameManager.Instance;
-        
+        GameEvents gameEvents = GameEvents.Instance;
+        gameEvents.TriggerSkills(Define.SkillTriggerType.BattleStart);
 
         yield return gameManager.StartCoroutine(gameManager.cameraMovement.PanTo(attackerUnit.Location, defenderUnit.Location));
 
@@ -25,7 +27,7 @@ public class BattleManager
         {
             yield return gameManager.StartCoroutine(defenderUnit.Character.TriggerExperienceGain(attackerUnit));
         }
-
+        gameEvents.TriggerSkills(Define.SkillTriggerType.BattleEnd);
         //yield return gameManager.StartCoroutine(testMethod());
         yield break;
     }
@@ -58,11 +60,11 @@ public class BattleManager
         }
 
 
-        if (attacker.ModifiedSpeed >= defender.ModifiedSpeed + Define.SPEEDTHRESHOLD && attacker.EquippedWeapon != null && !isBattleOver)
+        if (attacker.Speed.GetModifiedValue() >= defender.Speed.GetModifiedValue() + Define.SPEEDTHRESHOLD && attacker.EquippedWeapon != null && !isBattleOver)
         {
             yield return gameManager.StartCoroutine(PerformCombatRound(attackerUnit, defenderUnit));
 
-        } else if (defender.ModifiedSpeed >= attacker.ModifiedSpeed + Define.SPEEDTHRESHOLD && !isBattleOver)
+        } else if (defender.Speed.GetModifiedValue() >= attacker.Speed.GetModifiedValue() + Define.SPEEDTHRESHOLD && !isBattleOver)
         {
             if (canDefenderRetalite)
             {
@@ -115,7 +117,7 @@ public class BattleManager
 
         if (damageDealer.EquippedWeapon.IsMagical)
         {
-            reduction = damageReciever.ModifiedResistance;
+            reduction = damageReciever.Resistance.GetModifiedValue();
         }
         else
         {
@@ -157,14 +159,14 @@ public class BattleManager
 
         if (weapon.IsMagical)
         {
-            damage = Mathf.Max(0,attacker.Attack - defender.ModifiedResistance);
+            damage = Mathf.Max(0,attacker.Attack - defender.Resistance.GetModifiedValue());
         }
         else
         {
             damage = attacker.Attack - defender.Guard; // CONSIDER - this doesn't take terrain into account
         }
         
-        if(attacker.ModifiedSpeed >= defender.ModifiedSpeed + Define.SPEEDTHRESHOLD)
+        if(attacker.Speed.GetModifiedValue() >= defender.Speed.GetModifiedValue() + Define.SPEEDTHRESHOLD)
         {
             damage *= 2;
         }
@@ -233,7 +235,7 @@ public class BattleManager
         }
 
         score += damage;
-        score -= defender.ModifiedDefence;
+        score -= defender.Defence.GetModifiedValue();
 
         if (weapon.rending >= 3 && weapon.rending > defender.currentArmour * 0.2f)
         {

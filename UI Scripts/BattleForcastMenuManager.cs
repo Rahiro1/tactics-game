@@ -43,12 +43,12 @@ public class BattleForcastMenuManager : MonoBehaviour
         
         if(attacker.EquippedWeapon.IsMagical)
         {
-            dmgAtkText.text = Mathf.Max(0,attacker.Attack - defender.ModifiedResistance).ToString();
+            dmgAtkText.text = Mathf.Max(0,attacker.Attack - defender.Resistance.GetModifiedValue()).ToString();
         } else
         {
             dmgAtkText.text = Mathf.Max(0,attacker.Attack - defenderUnit.UnitTotalGuard).ToString();
         }
-        if (attacker.ModifiedSpeed >= defender.ModifiedSpeed + Define.SPEEDTHRESHOLD)
+        if (attacker.Speed.GetModifiedValue() >= defender.Speed.GetModifiedValue() + Define.SPEEDTHRESHOLD)
         {
             attackerDoubleText.gameObject.SetActive(true);
         }
@@ -64,13 +64,13 @@ public class BattleForcastMenuManager : MonoBehaviour
         {
             if (defender.EquippedWeapon.IsMagical)
             {
-                dmgDefText.text = Mathf.Max(0, defender.Attack - attacker.ModifiedResistance).ToString();
+                dmgDefText.text = Mathf.Max(0, defender.Attack - attacker.Resistance.GetModifiedValue()).ToString();
             }
             else
             {
                 dmgDefText.text = Mathf.Max(0, defender.Attack - attackerUnit.UnitTotalGuard).ToString();
             }
-            if (defender.ModifiedSpeed >= attacker.ModifiedSpeed + Define.SPEEDTHRESHOLD)
+            if (defender.Speed.GetModifiedValue() >= attacker.Speed.GetModifiedValue() + Define.SPEEDTHRESHOLD)
             {
                 defenderDoubleText.gameObject.SetActive(true);
             }

@@ -15,7 +15,7 @@ public class WeaponRanksPanel : MonoBehaviour
         }
 
         int count = 0;
-        foreach (LevelCounter weaponRank in character.weaponRanks)
+        foreach (LevelCounter weaponRank in character.WeaponRanks)
         {
             if (count >= weaponRankDisplays.Count)
             {

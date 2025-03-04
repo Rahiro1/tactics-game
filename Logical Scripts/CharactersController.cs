@@ -15,7 +15,7 @@ public class CharactersController : UnitController
         startOfTurnLocation = location;
         gameManager = GameManager.Instance; // CONSIDER some of this code is repeated in genericController -> could make a virtual method in unitcontroller called InitialiseUnit() and override here 
         enemyRangeHighlighted = null;
-        currentHP = character.HP.value;
+        currentHP = character.HP.GetModifiedValue();
         currentArmour = maxArmour;
         unitSprite.sprite = character.GetCharacterSprite();
         BattalionNumber = character.battalionNumber;

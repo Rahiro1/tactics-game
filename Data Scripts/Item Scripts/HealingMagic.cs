@@ -35,7 +35,7 @@ public class HealingMagic : Item
 
     public virtual int GetModifiedPower(Character character)
     {
-        return power + Mathf.FloorToInt(character.ModifiedMagic/2f);
+        return power + Mathf.FloorToInt(character.Magic.GetModifiedValue()/2f);
     }
 
     public virtual int GetModifiedRange(Character character)
