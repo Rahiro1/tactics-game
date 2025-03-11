@@ -45,7 +45,7 @@ public class BattleManager
         // determine if defender can retaliate
         if (defender.EquippedWeapon != null)
         {
-            if (distanceBetweenCombatants <= defenderUnit.Character.EquippedWeapon.range)
+            if (distanceBetweenCombatants <= defenderUnit.Character.EquippedWeapon.BonusRange)
             {
                 canDefenderRetalite = true;
             }
@@ -229,7 +229,7 @@ public class BattleManager
         {
             score += 1000;
         }
-        else if(defender.EquippedWeapon.range < weapon.range)
+        else if(defender.EquippedWeapon.BonusRange < weapon.BonusRange)
         {
             score += 1000;
         }
@@ -237,9 +237,9 @@ public class BattleManager
         score += damage;
         score -= defender.Defence.GetModifiedValue();
 
-        if (weapon.rending >= 3 && weapon.rending > defender.currentArmour * 0.2f)
+        if (weapon.Rending >= 3 && weapon.Rending > defender.currentArmour * 0.2f)
         {
-            score += weapon.rending * 2;
+            score += weapon.Rending * 2;
         }
 
 

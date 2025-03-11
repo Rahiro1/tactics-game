@@ -23,9 +23,4 @@ public class StatisticConsumable : Item
         move = template.move;
     }
 
-
-    public StatisticConsumable() : base()
-    {
-
-    }
 }

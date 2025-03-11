@@ -8,9 +8,4 @@ public class MiscItem : Item
     {
 
     }
-
-    public MiscItem() : base()
-    {
-
-    }
 }

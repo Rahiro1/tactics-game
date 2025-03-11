@@ -15,7 +15,7 @@ public class LevelUpScreenManager : MonoBehaviour
         levelValueText.text = unit.Level.Level.ToString();
 
         // load stats initial numbers (before increase)
-        hpDisplay.LoadMenu(unit.HP.GetbaseValue(), hpIncrease);
+        hpDisplay.LoadMenu(unit.MaxHP.GetbaseValue(), hpIncrease);
         strDisplay.LoadMenu(unit.Strength.GetbaseValue(), strIncrease);
         magDisplay.LoadMenu(unit.Magic.GetbaseValue(), magIncrease);
         offDisplay.LoadMenu(unit.Offence.GetbaseValue(), offIncrease);
@@ -27,7 +27,7 @@ public class LevelUpScreenManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.2f);
 
-        yield return StartCoroutine(hpDisplay.IncreaseStat(unit.HP.GetbaseValue(), hpIncrease));
+        yield return StartCoroutine(hpDisplay.IncreaseStat(unit.MaxHP.GetbaseValue(), hpIncrease));
         yield return StartCoroutine(strDisplay.IncreaseStat(unit.Strength.GetbaseValue(), strIncrease));
         yield return StartCoroutine(magDisplay.IncreaseStat(unit.Magic.GetbaseValue(), magIncrease));
         yield return StartCoroutine(offDisplay.IncreaseStat(unit.Offence.GetbaseValue(), offIncrease));

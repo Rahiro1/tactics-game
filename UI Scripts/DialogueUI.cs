@@ -6,6 +6,7 @@ using TMPro;
 
 public class DialogueUI : MonoBehaviour
 {
+    public Image background;
     public Image characterImageOne;
     public Image characterImageTwo;
     public Image characterImageThree;
@@ -23,8 +24,19 @@ public class DialogueUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void playDialogue(Define.DialogueData dialogueData)
+    public void SetBackground(Sprite backgroundSprite)
     {
+        if(backgroundSprite != null)
+        {
+            background.sprite = backgroundSprite;
+        }
+        
+    }
+
+    public void playDialogue(Define.DialogueData dialogueData, Sprite background)
+    {
+
+        SetBackground(background);
         
         // load all sprites
         if (dialogueData.characterOne != null)
@@ -65,9 +77,6 @@ public class DialogueUI : MonoBehaviour
         {
             characterImageFour.gameObject.SetActive(false);
         }
-
-
-
 
 
         switch (dialogueData.speaker)

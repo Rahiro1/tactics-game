@@ -6,12 +6,6 @@ using UnityEngine.UI;
 
 public class GenericController : UnitController
 {
-    public ClassSO classDataSaveLoad; // class for save/load of levels,
-    public WeaponSO equippedWeapon;
-    public ArmourSO equippedArmour;
-    [SerializeField]  public List<ItemSO> startingInventory;
-    // TODO add skills list for generics. note: isn't this in character anyway?
-
     //UI elements
 
 
@@ -28,8 +22,8 @@ public class GenericController : UnitController
         enemyRangeHighlighted = null;
         //Debug.Log("Assigning sprite");
         unitSprite.sprite = Character.GetCharacterSprite();
-        currentHP = Character.HP.GetModifiedValue();
-        currentArmour = maxArmour;
+        Character.currentHP = Character.MaxHP.GetModifiedValue();
+        Character.currentArmour = Character.MaxArmour;
         BattalionNumber = unitData.battalionNumber;
         aIType = unitData.AIType;
         activatedAIType = unitData.SecondaryAIType;

@@ -10,42 +10,42 @@ public class RegenerationSkillSO : SkillSO
 
     public override int DefenceModifier(Character thisCharacter)
     {
-        return StatReductionAmount(thisCharacter.Defence.GetbaseValue(), thisCharacter.currentHP, thisCharacter.HP.GetbaseValue());
+        return StatReductionAmount(thisCharacter.Defence.GetbaseValue(), thisCharacter.currentHP, thisCharacter.MaxHP.GetbaseValue());
     }
 
     public override int MagicModifier(Character thisCharacter)
     {
-        return StatReductionAmount(thisCharacter.Magic.GetbaseValue(), thisCharacter.currentHP, thisCharacter.HP.GetbaseValue());
+        return StatReductionAmount(thisCharacter.Magic.GetbaseValue(), thisCharacter.currentHP, thisCharacter.MaxHP.GetbaseValue());
     }
 
     public override int MoveModifier(Character thisCharacter)
     {
-        return StatReductionAmount(thisCharacter.Move.GetbaseValue(), thisCharacter.currentHP, thisCharacter.HP.GetbaseValue());
+        return StatReductionAmount(thisCharacter.Move.GetbaseValue(), thisCharacter.currentHP, thisCharacter.MaxHP.GetbaseValue());
     }
 
     public override int OffenceModifier(Character thisCharacter)
     {
-        return StatReductionAmount(thisCharacter.Offence.GetbaseValue(), thisCharacter.currentHP, thisCharacter.HP.GetbaseValue());
+        return StatReductionAmount(thisCharacter.Offence.GetbaseValue(), thisCharacter.currentHP, thisCharacter.MaxHP.GetbaseValue());
     }
 
     public override int ResistanceModifier(Character thisCharacter)
     {
-        return StatReductionAmount(thisCharacter.Resistance.GetbaseValue(), thisCharacter.currentHP, thisCharacter.HP.GetbaseValue());
+        return StatReductionAmount(thisCharacter.Resistance.GetbaseValue(), thisCharacter.currentHP, thisCharacter.MaxHP.GetbaseValue());
     }
 
     public override int SpeedModifier(Character thisCharacter)
     {
-        return StatReductionAmount(thisCharacter.Speed.GetbaseValue(), thisCharacter.currentHP, thisCharacter.HP.GetbaseValue());
+        return StatReductionAmount(thisCharacter.Speed.GetbaseValue(), thisCharacter.currentHP, thisCharacter.MaxHP.GetbaseValue());
     }
 
     public override int StrengthModifier(Character thisCharacter)
     {
-        return StatReductionAmount(thisCharacter.Strength.GetbaseValue(), thisCharacter.currentHP, thisCharacter.HP.GetbaseValue());  // should this be base str?
+        return StatReductionAmount(thisCharacter.Strength.GetbaseValue(), thisCharacter.currentHP, thisCharacter.MaxHP.GetbaseValue());  // should this be base str?
     }
 
     public override int RegenerationAmount(Character thisCharacter)
     {
-        return Mathf.CeilToInt(thisCharacter.HP.GetbaseValue() * regeneration / 100f);
+        return Mathf.CeilToInt(thisCharacter.MaxHP.GetbaseValue() * regeneration / 100f);
     }
 
     public int StatReductionAmount(int statToModify, int currentHP, int maxHP)

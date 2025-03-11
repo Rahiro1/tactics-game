@@ -39,7 +39,7 @@ public class BattleForcastMenuManager : MonoBehaviour
         defenderDoubleText.gameObject.SetActive(false);
 
 
-        hpAtkText.text = attackerUnit.currentHP.ToString();
+        hpAtkText.text = attackerUnit.Character.currentHP.ToString();
         
         if(attacker.EquippedWeapon.IsMagical)
         {
@@ -53,12 +53,12 @@ public class BattleForcastMenuManager : MonoBehaviour
             attackerDoubleText.gameObject.SetActive(true);
         }
         hitAtkText.text = Mathf.Clamp(attacker.OffensiveHit - defenderUnit.UnitTotalAvoid, 0, 100).ToString();
-        amrAtkText.text = attacker.EquippedWeapon.rending.ToString();
+        amrAtkText.text = attacker.EquippedWeapon.Rending.ToString();
         crtAtkText.text = Mathf.Max(0, (attacker.CriticalRate - defender.CriticalAvoid) * 100 / defender.CriticalAvoid).ToString(); // TODO use units here for crit avoid? Terrain?
         attackerWeaponIcon.sprite = attacker.EquippedWeapon.GetItemSO().itemIcon;
         atkWeaponText.text = attacker.EquippedWeapon.ItemName;
 
-        hpDefText.text = defenderUnit.currentHP.ToString();
+        hpDefText.text = defenderUnit.Character.currentHP.ToString();
 
         if (canDefenderRetaliate)
         {
@@ -75,7 +75,7 @@ public class BattleForcastMenuManager : MonoBehaviour
                 defenderDoubleText.gameObject.SetActive(true);
             }
             hitDefText.text = Mathf.Clamp(defender.DefensiveHit - attackerUnit.UnitTotalAvoid, 0, 100).ToString();
-            amrDefText.text = defender.EquippedWeapon.rending.ToString();
+            amrDefText.text = defender.EquippedWeapon.Rending.ToString();
             crtDefText.text = Mathf.Max(0, (defender.CriticalRate - attacker.CriticalAvoid) * 100 / attacker.CriticalAvoid).ToString();
             defenderWeaponIcon.sprite = defender.EquippedWeapon.GetItemSO().itemIcon;
             defenderWeaponIcon.gameObject.SetActive(true);

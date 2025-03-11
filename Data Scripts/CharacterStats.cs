@@ -277,81 +277,55 @@ public class CharacterStats
         Move.ChangeStatMax(maxMove);
     }
 
-    public void AddModifiersFromSkill(SkillSO skill, Character character)
+    public void AddModifiersFromComplexEquippable(IComplexStatsGiver equip, Character character)
     {
-        string sourceName = skill.skillName;
+        string sourceName = equip.EquipmentName();
 
-        HP.AddModifier(sourceName, skill.MaxHpModifier(character));
-        Strength.AddModifier(sourceName, skill.StrengthModifier(character));
-        Magic.AddModifier(sourceName, skill.MagicModifier(character));
-        Offence.AddModifier(sourceName, skill.OffenceModifier(character));
-        Defence.AddModifier(sourceName, skill.DefenceModifier(character));
-        Resistance.AddModifier(sourceName, skill.ResistanceModifier(character));
-        Speed.AddModifier(sourceName, skill.SpeedModifier(character));
-        Move.AddModifier(sourceName, skill.MoveModifier(character));
-        BonusMaxArmour.AddModifier(sourceName, skill.ArmourModifier(character));
-        BonusAttack.AddModifier(sourceName, skill.AttackModifier(character));
-        BonusOffensiveHit.AddModifier(sourceName, skill.OffensiveHitModifier(character));
-        BonusDefensiveHit.AddModifier(sourceName, skill.DefensiveHitModifier(character));
-        BonusAvoid.AddModifier(sourceName, skill.AvoidModifier(character));
-        BonusCriticalRate.AddModifier(sourceName, skill.CriticalRateModifier(character));
-        BonusCriticalAvoid.AddModifier(sourceName, skill.CriticalAvoidModifier(character));
-        BonusGuard.AddModifier(sourceName, skill.GuardModifier(character));
-        BonusWield.AddModifier(sourceName, skill.WieldModifier(character));
-        BonusRending.AddModifier(sourceName, skill.RendingModifier(character));
-        BonusRange.AddModifier(sourceName, skill.RangeModifier(character));
+        HP.AddModifier(sourceName, equip.MaxHPModifier(character));
+        Strength.AddModifier(sourceName, equip.StrengthModifier(character));
+        Magic.AddModifier(sourceName, equip.MagicModifier(character));
+        Offence.AddModifier(sourceName, equip.OffenceModifier(character));
+        Defence.AddModifier(sourceName, equip.DefenceModifier(character));
+        Resistance.AddModifier(sourceName, equip.ResistanceModifier(character));
+        Speed.AddModifier(sourceName, equip.SpeedModifier(character));
+        Move.AddModifier(sourceName, equip.MoveModifier(character));
+        BonusMaxArmour.AddModifier(sourceName, equip.MaxArmourModifier(character));
+        BonusAttack.AddModifier(sourceName, equip.AttackModifier(character));
+        BonusOffensiveHit.AddModifier(sourceName, equip.OffensiveHitModifier(character));
+        BonusDefensiveHit.AddModifier(sourceName, equip.DefensiveHitModifier(character));
+        BonusAvoid.AddModifier(sourceName, equip.AvoidModifier(character));
+        BonusCriticalRate.AddModifier(sourceName, equip.CriticalRateModifier(character));
+        BonusCriticalAvoid.AddModifier(sourceName, equip.CriticalAvoidModifier(character));
+        BonusGuard.AddModifier(sourceName, equip.GuardModifier(character));
+        BonusWield.AddModifier(sourceName, equip.WieldModifier(character));
+        BonusRending.AddModifier(sourceName, equip.RendingModifier(character));
+        BonusRange.AddModifier(sourceName, equip.RangeModifier(character));
     }
 
-    public void AddModifiersFromWeapon(Weapon weapon, Character character)
+    public void AddModifiersFromEquippable(IStatsGiver equip)
     {
-        string sourceName = weapon.ItemName;
+        string sourceName = equip.EquipmentName();
 
-        // TODO - add all possible modifiers from weapon
-        HP.AddModifier(sourceName, 0);
-        Strength.AddModifier(sourceName, weapon.bonusStrength);
-        Magic.AddModifier(sourceName, weapon.bonusMagic);
-        Offence.AddModifier(sourceName, weapon.offence);
-        Defence.AddModifier(sourceName, weapon.defence);
-        Resistance.AddModifier(sourceName, weapon.bonusResistance);
-        Speed.AddModifier(sourceName, weapon.bonusSpeed);
-        Move.AddModifier(sourceName, 0);
-        BonusMaxArmour.AddModifier(sourceName, 0);
-        BonusAttack.AddModifier(sourceName, weapon.power);
-        BonusOffensiveHit.AddModifier(sourceName, 0);
-        BonusDefensiveHit.AddModifier(sourceName, 0);
-        BonusAvoid.AddModifier(sourceName, 0);
-        BonusCriticalRate.AddModifier(sourceName, weapon.criticalRate);
-        BonusCriticalAvoid.AddModifier(sourceName, 0);
-        BonusGuard.AddModifier(sourceName, 0);
-        BonusWield.AddModifier(sourceName, 0);
-        BonusRending.AddModifier(sourceName, weapon.rending);
-        BonusRange.AddModifier(sourceName, weapon.range);
-    }
-
-    public void AddModifiersFromArmour(Armour armour, Character character)
-    {
-        string sourceName = armour.ItemName;
-
-        // TODO - add all possible modifiers from armour
-        HP.AddModifier(sourceName, 0);
-        Strength.AddModifier(sourceName, armour.bonusStrength);
-        Magic.AddModifier(sourceName, armour.bonusMagic);
-        Offence.AddModifier(sourceName, armour.armourOffence);
-        Defence.AddModifier(sourceName, armour.armourDefence);
-        Resistance.AddModifier(sourceName, armour.bonusResistance);
-        Speed.AddModifier(sourceName, armour.bonusSpeed);
-        Move.AddModifier(sourceName, 0);
-        BonusMaxArmour.AddModifier(sourceName, armour.armourValue);
-        BonusAttack.AddModifier(sourceName, 0);
-        BonusOffensiveHit.AddModifier(sourceName, 0);
-        BonusDefensiveHit.AddModifier(sourceName, 0);
-        BonusAvoid.AddModifier(sourceName, 0);
-        BonusCriticalRate.AddModifier(sourceName, 0);
-        BonusCriticalAvoid.AddModifier(sourceName, 0);
-        BonusGuard.AddModifier(sourceName, 0);
-        BonusWield.AddModifier(sourceName, 0);
-        BonusRending.AddModifier(sourceName, 0);
-        BonusRange.AddModifier(sourceName, 0);
+        
+        HP.AddModifier(sourceName, equip.MaxHPModifier());
+        Strength.AddModifier(sourceName, equip.StrengthModifier());
+        Magic.AddModifier(sourceName, equip.MagicModifier());
+        Offence.AddModifier(sourceName, equip.OffenceModifier());
+        Defence.AddModifier(sourceName, equip.DefenceModifier());
+        Resistance.AddModifier(sourceName, equip.ResistanceModifier());
+        Speed.AddModifier(sourceName, equip.SpeedModifier());
+        Move.AddModifier(sourceName, equip.MoveModifier());
+        BonusMaxArmour.AddModifier(sourceName, equip.MaxArmourModifier());
+        BonusAttack.AddModifier(sourceName, equip.AttackModifier());
+        BonusOffensiveHit.AddModifier(sourceName, equip.OffensiveHitModifier());
+        BonusDefensiveHit.AddModifier(sourceName, equip.DefensiveHitModifier());
+        BonusAvoid.AddModifier(sourceName, equip.AvoidModifier());
+        BonusCriticalRate.AddModifier(sourceName, equip.CriticalRateModifier());
+        BonusCriticalAvoid.AddModifier(sourceName, equip.CriticalAvoidModifier());
+        BonusGuard.AddModifier(sourceName, equip.GuardModifier());
+        BonusWield.AddModifier(sourceName, equip.WieldModifier());
+        BonusRending.AddModifier(sourceName, equip.RendingModifier());
+        BonusRange.AddModifier(sourceName, equip.RangeModifier());
     }
 
     public void RemoveModifiers(string modifierName)

@@ -28,11 +28,6 @@ public class HealingMagic : Item
         tertiaryWeaopnType = template.tertiaryWeaopnType;
     }
 
-    public HealingMagic() : base()
-    {
-
-    }
-
     public virtual int GetModifiedPower(Character character)
     {
         return power + Mathf.FloorToInt(character.Magic.GetModifiedValue()/2f);

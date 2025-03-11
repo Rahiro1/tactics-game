@@ -8,54 +8,22 @@ using System;
 
 public class UnitController : MonoBehaviour
 {
-    public int level;
-    public string unitName;
-    public Character Character;
-    public int uniqueID;
+    public Character Character { get; protected set; }
+    private int uniqueID;
     protected GameManager gameManager;
-    [SerializeField]
-    public int currentHP //TODO - sort out references to currentHP and redirect to character
-    {
-        get
-        {
-            return Character.currentHP;
-        }
-        protected set
-        {
-            Character.currentHP = value;
-        }
-    }
-    public int currentArmour
-    {
-        get
-        {
-            return Character.currentArmour;
-        }
-        protected set
-        {
-            Character.currentArmour = value;
-        }
-    }
-    public int remainingMovement;
-    public Define.UnitAllignment unitAllignment; // CONSIDER change name to unitAllignmentLoad
-    public int BattalionNumber;
-    public Battalion battalion;
-    public Define.AIType aIType;
-    public Define.AIType activatedAIType;
+    private int remainingMovement;
+    public int BattalionNumber { get; protected set; }
+    public Battalion battalion { get; set; }
+    public Define.AIType aIType { get; protected set; }
+    public Define.AIType activatedAIType { get; protected set; }
     public bool isActivated;
     private List<MapTileController> moveRange;
-    public Vector3Int Location { get; set; }
-    public MapTileController LocationTile {
-        get
-        {
-            return gameManager.levelMapManager.GetValue(Location);
-        }
-    }
-    public Vector3Int startOfTurnLocation { get; set; }
-    public List<MapTileController> path;
+    public Vector3Int Location { get; protected set; }
+    public MapTileController LocationTile { get{ return gameManager.levelMapManager.GetValue(Location); }}
+    protected Vector3Int startOfTurnLocation { get; set; }
+    private List<MapTileController> path;
     public bool hasActed;
-    public bool isEnemyRangeHighlighted = false; // CONSIDER removing this
-    public bool IsAnimationFin;
+    private bool IsAnimationFin;
     public bool IsDestroyed = false;
     [HideInInspector] public List<MapTileController> enemyRangeHighlighted;
 
@@ -70,9 +38,15 @@ public class UnitController : MonoBehaviour
     public Slider healthslider;
     public Image greyoutImage;
 
+    // testing - will remove
+    private int positionCount;
+    private bool goingUp;
+
+
+
 
     // calculated stats
-
+    // TODO - work terrain bonuses into the modifier system
     public int UnitTotalGuard
     {
         get
@@ -88,48 +62,6 @@ public class UnitController : MonoBehaviour
             return Character.Avoid + gameManager.levelMapManager.GetValue(Location).AvoidValue;
         }
     }
-
-    // basic stats - TODO - make sure these are needed and rename if they are
-
-    protected int maxArmour
-    {
-        get
-        {
-            return Character.MaxArmour; // re look at these
-        }
-    }
-    private int maxHP
-    {
-        get
-        {
-            return Character.HP.GetModifiedValue(); // re look at these
-        }
-    }
-    private int Strength
-    {
-        get
-        {
-            return Character.Strength.GetModifiedValue();
-        }
-    }
-    private int Magic
-    {
-        get
-        {
-            return Character.Magic.GetModifiedValue();
-        }
-    }
-    private int offence
-    {
-        get
-        {
-            return Character.Offence.GetModifiedValue();
-        }
-    }
-    private int defence;
-    private int resistance;
-    private int speed;
-
 
     public void SetHasActed(bool state)
     {
@@ -153,6 +85,27 @@ public class UnitController : MonoBehaviour
         uniqueID = gameObject.GetInstanceID();
     }
 
+    public void Update()
+    {
+        if (positionCount > 100)
+        {
+            goingUp = !goingUp;
+            positionCount = 0;
+        }
+
+        if (goingUp)
+        {
+            gameObject.transform.position = transform.position + Vector3.up*0.0005f;
+            positionCount++;
+        }
+        else
+        {
+            gameObject.transform.position = transform.position + Vector3.down * 0.0005f;
+            positionCount++;
+        }
+    }
+
+    // called at the start of every turn to 
     public void StartOfTurnReset()
     {
         startOfTurnLocation = Location;
@@ -160,7 +113,7 @@ public class UnitController : MonoBehaviour
         SetHasActed(false);
     }
 
-    public void ResetToStartOfTurn()
+    public void UndoToStartOfTurn()
     {
         transform.position = gameManager.tileMapGrid.CellToWorld(startOfTurnLocation);
         gameManager.levelMapManager.RemoveUnit(Location);
@@ -181,15 +134,16 @@ public class UnitController : MonoBehaviour
     public bool TakeDamage(int damage, int rending)
     {
         // TODO make sure unit is desroyed after moving and animations
-        currentHP = Mathf.Clamp(currentHP - damage, 0, currentHP);
-        currentArmour = Mathf.Clamp(currentArmour - rending,0,maxArmour);
+        // CONSIDER making a characer.TakeDamage() method
+        Character.currentHP = Mathf.Clamp(Character.currentHP - damage, 0, Character.currentHP);
+        Character.currentArmour = Mathf.Clamp(Character.currentArmour - rending,0, Character.MaxArmour);
         ActivateBattalion();
         UpdateHealthBar();
         // update display
 
         GameEvents.Instance.TriggerSkills(Define.SkillTriggerType.TakeDamage);
 
-        if (currentHP <= 0)
+        if (Character.currentHP <= 0)
         {
             // TODO - permadeath difficulty option if true -> bool = true else false
             
@@ -205,8 +159,8 @@ public class UnitController : MonoBehaviour
 
     public void RecieveHeal(int healAmount, int armourHeal)
     {
-        currentHP = Mathf.Clamp(currentHP + healAmount, 1, maxHP);
-        currentArmour = Mathf.Clamp(currentArmour + armourHeal, 0, maxArmour);
+        Character.currentHP = Mathf.Clamp(Character.currentHP + healAmount, 1, Character.MaxHP.GetModifiedValue());
+        Character.currentArmour = Mathf.Clamp(Character.currentArmour + armourHeal, 0, Character.MaxArmour);
         UpdateHealthBar();
     }
 
@@ -312,10 +266,8 @@ public class UnitController : MonoBehaviour
 
     public List<MapTileController> GetEquippedAttackRange()
     {
-        return gameManager.rangefinder.GetTilesInAttackRange(Character.EquippedWeapon.range, LocationTile);
+        return gameManager.rangefinder.GetTilesInAttackRange(Character.EquippedWeapon.BonusRange, LocationTile);
     }
-
-
 
     public void DisplayRange()
     {
@@ -422,18 +374,19 @@ public class UnitController : MonoBehaviour
 
     public void UpdateHealthBar()
     {
+        int maxHP = Character.MaxHP.GetModifiedValue();
         healthbar.maxValue = maxHP;  // make sure this is simple I have comined generic and char versions of this
-        healthbar.value = currentHP;
-        armourText.text = currentArmour.ToString();
-        if (currentHP < maxHP)
+        healthbar.value = Character.currentHP;
+        armourText.text = Character.currentArmour.ToString();
+        if (Character.currentHP < maxHP)
         {
             healthbarFill.color = Color.green;
         }
-        if (currentHP < maxHP / 2)
+        if (Character.currentHP < maxHP / 2)
         {
             healthbarFill.color = Color.yellow;
         }
-        if (currentHP < maxHP / 4)
+        if (Character.currentHP < maxHP / 4)
         {
             healthbarFill.color = Color.red;
         }
@@ -449,9 +402,9 @@ public class UnitController : MonoBehaviour
         {
             if (item is Weapon weapon)
             {
-                if (maxWeaponRange < weapon.range)
+                if (maxWeaponRange < weapon.BonusRange)
                 {
-                    maxWeaponRange = weapon.range;
+                    maxWeaponRange = weapon.BonusRange;
                 }
             }
         }

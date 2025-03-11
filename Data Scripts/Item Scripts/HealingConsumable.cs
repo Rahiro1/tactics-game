@@ -11,9 +11,4 @@ public class HealingConsumable : Item
         healAmount = template.healAmount;
         healArmourAmount = template.healArmourAmount;
     }
-
-    public HealingConsumable() : base()
-    {
-
-    }
 }

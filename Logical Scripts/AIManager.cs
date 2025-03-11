@@ -414,7 +414,7 @@ public class AIManager
         //Debug.Log("attacker Loaction " + thisUnit.Location.ToString() + " defender Location" + target.Location.ToString());
 
         //Debug.Log("weapon to consider: " + weaponToUse.ToString());
-        if (weaponToUse != null && weaponToUse.range >= distanceToTarget)
+        if (weaponToUse != null && weaponToUse.BonusRange >= distanceToTarget)
         {
             //Debug.Log("weapon being used: " + weaponToUse.ToString() + " targeting: " + target.ToString());
             thisUnit.Character.EquipWeapon(weaponToUse);
@@ -433,7 +433,7 @@ public class AIManager
         {
             if (item is Weapon weapon)
             {
-                if (weapon.range >= distanceToTarget)
+                if (weapon.BonusRange >= distanceToTarget)
                 {
                     if (battleManager.DeterminePotentialDamage(thisUnit.Character, weapon, target.Character) > weaponPotentialDamage)
                     {

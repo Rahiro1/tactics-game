@@ -219,14 +219,6 @@ public class Define
         Critical = 6
     }
 
-    /*public struct TerrainDifficultyValues
-    {
-        public int footDifficulty;
-        public int armourDifficulty;
-        public int waterDifficulty;
-        public int flyingDifficulty;
-    }*/
-
     [System.Serializable]
     public struct GenericEnemyData // can be used for any generic unit
     {
@@ -303,6 +295,7 @@ public class Define
         // just for breaking down the parts of the story in each StorySO
         public List<DialogueData> dialogueList;
         public StoryEventSO storyEvent;
+        public Sprite background;
     }
 
     [System.Serializable]
@@ -316,13 +309,4 @@ public class Define
         public string text;
         
     }
-
-    /*public struct WeaponRankData
-    {
-        public WeaponType weaponType;
-        public int weaponRank;
-        public int experiance;
-        public int weaponMasteryLevel;
-    }
-    */
 }

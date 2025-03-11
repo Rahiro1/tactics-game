@@ -92,7 +92,7 @@ public class StoryState : State
             
         }*/
 
-        GameManager.Instance.dialogueUI.playDialogue(currentStorySO.storyDatas[storyProgress].dialogueList[dialogueProgress]);
+        GameManager.Instance.dialogueUI.playDialogue(currentStorySO.storyDatas[storyProgress].dialogueList[dialogueProgress], currentStorySO.storyDatas[storyProgress].background);
         dialogueProgress++;
     }
 

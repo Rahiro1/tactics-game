@@ -30,7 +30,7 @@ public class AttackState : State
         //Debug.Log("Click Enemy Attack State");
         UnitController attacker = gameManager.selectedPlayer;
           
-        if(gameManager.levelMapManager.GetManhattenDistance(attacker.LocationTile, unit.LocationTile) <= attacker.Character.EquippedWeapon.range)
+        if(gameManager.levelMapManager.GetManhattenDistance(attacker.LocationTile, unit.LocationTile) <= attacker.Character.EquippedWeapon.BonusRange)
         {
             OnExitingState();
             gameManager.battleForcast.OpenMenu(attacker, unit);

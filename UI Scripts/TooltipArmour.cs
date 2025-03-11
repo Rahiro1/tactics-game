@@ -37,11 +37,10 @@ public class TooltipArmour : MonoBehaviour
 
         // set text 
         nameText.text = armour.ItemName;
-        armourValueText.text = armour.armourValue.ToString();
-        defenceValueText.text = armour.armourDefence.ToString();
-        magicValueText.text = armour.bonusMagic.ToString();
-        weaponComplexityValueText.text = armour.armourComplexity.ToString();
-        resistanceValueText.text = armour.bonusResistance.ToString();
+        armourValueText.text = armour.ArmourValue.ToString();
+        defenceValueText.text = armour.BonusDefence.ToString();
+        magicValueText.text = armour.BonusMagic.ToString();
+        resistanceValueText.text = armour.BonusResistance.ToString();
         descriptionText.text = armour.ItemDescription.ToString();
 
 

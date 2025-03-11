@@ -37,13 +37,12 @@ public class TooltipWeapon : MonoBehaviour
 
         // set text 
         nameText.text = weapon.ItemName;
-        powerValueText.text = weapon.power.ToString();
-        offenceValueText.text = weapon.offence.ToString();
-        defenceValueText.text = weapon.defence.ToString();
-        rendingValueText.text = weapon.rending.ToString();
-        weaponComplexityValueText.text = weapon.complexity.ToString();
-        rangeValueText.text = weapon.range.ToString();
-        criticalValueText.text = weapon.criticalRate.ToString();
+        powerValueText.text = weapon.Attack.ToString();
+        offenceValueText.text = weapon.Offence.ToString();
+        defenceValueText.text = weapon.Defence.ToString();
+        rendingValueText.text = weapon.Rending.ToString();
+        rangeValueText.text = weapon.BonusRange.ToString();
+        criticalValueText.text = weapon.CriticalRate.ToString();
         descriptionText.text = weapon.ItemDescription.ToString();
 
 

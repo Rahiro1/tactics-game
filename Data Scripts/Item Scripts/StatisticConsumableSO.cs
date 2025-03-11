@@ -21,7 +21,7 @@ public class StatisticConsumableSO : ItemSO
 
     public override void OnUse(UnitController unit)
     {
-        unit.Character.HP.ChangeBaseStatValue(hP);
+        unit.Character.MaxHP.ChangeBaseStatValue(hP);
         unit.Character.Strength.ChangeBaseStatValue(strength);
         unit.Character.Magic.ChangeBaseStatValue(magic);
         unit.Character.Offence.ChangeBaseStatValue(offence);

@@ -8,9 +8,6 @@ public class PCArmouryManager : MonoBehaviour
     public List<ArmouryInventoryButton> armouryButtons;
     private Shop shop;
     public TabManager primaryTabManager;
-    public Sprite weaponButtonBackground;
-    public Sprite armourButtonBackground;
-    public Sprite otherItemButtonBackground;
     public TextMeshProUGUI itemOwnedQuantityText, playerFundsText;
 
 
@@ -57,7 +54,7 @@ public class PCArmouryManager : MonoBehaviour
 
 
             armouryButtons[i].DisplayItem(shopItem);
-            armouryButtons[i].backgroundImage.sprite = weaponButtonBackground;
+            armouryButtons[i].backgroundImage.sprite = Database.Instance.weaponButtonBackground;
             armouryButtons[i].gameObject.SetActive(true);
             i++;
 
@@ -90,7 +87,7 @@ public class PCArmouryManager : MonoBehaviour
 
 
             armouryButtons[i].DisplayItem(shopItem);
-            armouryButtons[i].backgroundImage.sprite = armourButtonBackground;
+            armouryButtons[i].backgroundImage.sprite = Database.Instance.armourButtonBackground;
             armouryButtons[i].gameObject.SetActive(true);
             i++;
 
@@ -118,7 +115,7 @@ public class PCArmouryManager : MonoBehaviour
 
 
             armouryButtons[i].DisplayItem(shopItem);
-            armouryButtons[i].backgroundImage.sprite = otherItemButtonBackground;
+            armouryButtons[i].backgroundImage.sprite = Database.Instance.otherItemButtonBackground;
             armouryButtons[i].gameObject.SetActive(true);
             i++;
 

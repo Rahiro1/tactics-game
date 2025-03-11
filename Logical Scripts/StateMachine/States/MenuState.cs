@@ -49,7 +49,7 @@ public class MenuState : State
         if (unit != null) // reseting unit to how it was before it was selected
         {
 
-            unit.ResetToStartOfTurn(); 
+            unit.UndoToStartOfTurn(); 
         }
 
         gameManager.SetState(new PlayerTurnState(gameManager));

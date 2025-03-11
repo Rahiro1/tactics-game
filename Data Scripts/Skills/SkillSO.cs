@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Assets/Skills/Generic")]
-public class SkillSO : ScriptableObject
+public class SkillSO : ScriptableObject, IComplexStatsGiver
 {
     public int skillID;
     public string skillName;
@@ -36,7 +36,11 @@ public class SkillSO : ScriptableObject
         return isActive;
     }
 
-    public virtual int MaxHpModifier(Character thisCharacter)
+    public string EquipmentName()
+    {
+        return skillName;
+    }
+    public virtual int MaxHPModifier(Character thisCharacter)
     {
         return 0;
     }
@@ -76,7 +80,7 @@ public class SkillSO : ScriptableObject
         return 0;
     }
 
-    public virtual int ArmourModifier(Character thisCharacter)
+    public virtual int MaxArmourModifier(Character thisCharacter)
     {
         return 0;
     }
@@ -133,11 +137,11 @@ public class SkillSO : ScriptableObject
 
     public virtual int RegenerationAmount(Character thisCharacter)
     {
-        return RegenerationFlat + Mathf.CeilToInt(thisCharacter.HP.GetbaseValue() * RegenerationPercent);
+        return RegenerationFlat + Mathf.CeilToInt(thisCharacter.MaxHP.GetbaseValue() * RegenerationPercent);
     }
     public virtual int ArmourRegenerationAmount(Character thisCharacter)
     {
-        return ArmourRegenerationFlat + Mathf.CeilToInt(thisCharacter.HP.GetbaseValue() * ArmourRegenerationPercent);
+        return ArmourRegenerationFlat + Mathf.CeilToInt(thisCharacter.MaxHP.GetbaseValue() * ArmourRegenerationPercent);
     }
 
     public virtual int OffensiveSkillActivationBonus(int damage, int rending, int skillroll, out int newRending)

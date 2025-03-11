@@ -8,9 +8,6 @@ public class PCShopManager : MonoBehaviour
     public List<ShopInventoryButton> shopButtons;
     private Shop shop;
     public TabManager primaryTabManager;
-    public Sprite weaponButtonBackground;
-    public Sprite armourButtonBackground;
-    public Sprite otherItemButtonBackground;
     public TextMeshProUGUI itemOwnedQuantityText, playerFundsText, playerFavourText;
 
 
@@ -58,7 +55,7 @@ public class PCShopManager : MonoBehaviour
 
 
             shopButtons[i].DisplayItem(shopItem);
-            shopButtons[i].backgroundImage.sprite = weaponButtonBackground;
+            shopButtons[i].backgroundImage.sprite = Database.Instance.weaponButtonBackground;
             shopButtons[i].gameObject.SetActive(true);
             i++;
 
@@ -91,7 +88,7 @@ public class PCShopManager : MonoBehaviour
 
 
             shopButtons[i].DisplayItem(shopItem);
-            shopButtons[i].backgroundImage.sprite = armourButtonBackground;
+            shopButtons[i].backgroundImage.sprite = Database.Instance.armourButtonBackground;
             shopButtons[i].gameObject.SetActive(true);
             i++;
 
@@ -119,7 +116,7 @@ public class PCShopManager : MonoBehaviour
 
 
             shopButtons[i].DisplayItem(shopItem);
-            shopButtons[i].backgroundImage.sprite = otherItemButtonBackground;
+            shopButtons[i].backgroundImage.sprite = Database.Instance.otherItemButtonBackground;
             shopButtons[i].gameObject.SetActive(true);
             i++;
 

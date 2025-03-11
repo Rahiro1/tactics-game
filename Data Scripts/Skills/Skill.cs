@@ -45,7 +45,7 @@ public class Skill
 
     public int ArmourModifier(Character thisCharacter)
     {
-        return SkillSO.ArmourModifier(thisCharacter);
+        return SkillSO.MaxArmourModifier(thisCharacter);
     }
 
     public int MoveModifier(Character thisCharacter)

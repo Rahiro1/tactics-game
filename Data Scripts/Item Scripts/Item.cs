@@ -1,20 +1,21 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Item 
 {
-    public int itemID { get; set; }
-    public string ItemName { get; set; }
-    public string ItemDescription { get; set; }
-    public int ItemBaseCost { get; set; }
-    public int ItemCurrentDurability { get; set; }
-    public int ItemMaxDurability { get; set; }
-    public bool IsUseable { get; set; }
-    public bool IsUnbreakable { get; set; }
+    public int itemID { get; protected set; }
+    public string ItemName { get; protected set; }
+    public string ItemDescription { get; protected set; }
+    public int ItemBaseCost { get; protected set; }
+    public int ItemCurrentDurability { get; protected set; }
+    public int ItemMaxDurability { get; protected set; }
+    public bool IsUseable { get; protected set; }
+    public bool IsUnbreakable { get; protected set; }
 
-    public List<int> skillIDList;
-    public List<SkillSO> skillList;
+    public List<int> skillIDList { get; protected set; }
+    public List<SkillSO> skillList { get; protected set; }
 
     public void OnUse(UnitController unit)
     {
@@ -85,9 +86,18 @@ public abstract class Item
 
     }
 
-    public Item() : base()
+    [JsonConstructor]
+    public Item(int itemID, string itemName, string itemDescription, int itemBaseCost, int itemCurrentDurability, int itemMaxDurability, bool isUseable, bool isUnbreakable, List<int> skillIDList, List<SkillSO> skillList)
     {
-
+        this.itemID = itemID;
+        ItemName = itemName;
+        ItemDescription = itemDescription;
+        ItemBaseCost = itemBaseCost;
+        ItemCurrentDurability = itemCurrentDurability;
+        ItemMaxDurability = itemMaxDurability;
+        IsUseable = isUseable;
+        IsUnbreakable = isUnbreakable;
+        this.skillIDList = skillIDList;
+        this.skillList = skillList;
     }
-
 }

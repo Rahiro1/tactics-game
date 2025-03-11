@@ -32,7 +32,7 @@ public class Character
     private List<SkillSO> skillList;
 
     // basic stat getters
-    public Stat HP { get { return characterStats.HP; } }
+    public Stat MaxHP { get { return characterStats.HP; } }
     public Stat Strength { get { return characterStats.Strength; } }
     public Stat Magic { get { return characterStats.Magic; } }
     public Stat Offence { get { return characterStats.Offence; } }
@@ -197,8 +197,6 @@ public class Character
 
         if (EquippedWeapon != null)
         {
-            temp -= EquippedWeapon.complexity;
-
             wLvl = SelectWeaponLevelType(EquippedWeapon.weaponType).Level;
             wLvl -= EquippedWeapon.weaponRank;
 
@@ -269,7 +267,7 @@ public class Character
             {
                 if (skill.IsActive(this))
                 {
-                    characterStats.AddModifiersFromSkill(skill, this);
+                    characterStats.AddModifiersFromComplexEquippable(skill, this);
                 }
                 else
                 {
@@ -597,7 +595,7 @@ public class Character
         if (CanEquipWeapon(weapon))
         {
             EquippedWeapon = weapon;
-            characterStats.AddModifiersFromWeapon(weapon, this);
+            characterStats.AddModifiersFromEquippable(weapon);
         }
     }
 
@@ -615,7 +613,7 @@ public class Character
         if (CanEquipArmour(armour))
         {
             EquippedArmour = armour;
-            characterStats.AddModifiersFromArmour(armour, this);
+            characterStats.AddModifiersFromEquippable(armour);
         }
     }
 
@@ -731,7 +729,7 @@ public class Character
         }
 
         return newDamage;
-    }
+    } 
 
     [JsonConstructor]
     public Character(string characterName, int characterID, int classID, Define.UnitAllignment unitAllignment, Define.AIType AIType, Define.AIType secondaryAIType, Define.UnitType unitType,

@@ -11,9 +11,4 @@ public class Consumable : Item
     {
 
     }
-
-    public Consumable() : base()
-    {
-
-    }
 }
