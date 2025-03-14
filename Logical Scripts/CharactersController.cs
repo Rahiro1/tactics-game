@@ -21,6 +21,14 @@ public class CharactersController : UnitController
         BattalionNumber = character.battalionNumber;
         aIType = character.AIType;
         activatedAIType = character.secondaryAIType;
+        
+        animatorOverrideController = character.GetCharacterSO().animatorOverrideController;
+        if (animatorOverrideController != null)
+        {
+            animator.runtimeAnimatorController = animatorOverrideController;
+        }
+            
+
         isActivated = false;
         UpdateHealthBar();
         

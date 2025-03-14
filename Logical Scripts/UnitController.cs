@@ -9,6 +9,8 @@ using System;
 public class UnitController : MonoBehaviour
 {
     public Character Character { get; protected set; }
+    public Animator animator;
+    protected AnimatorOverrideController animatorOverrideController;
     private int uniqueID;
     protected GameManager gameManager;
     private int remainingMovement;
@@ -164,7 +166,11 @@ public class UnitController : MonoBehaviour
         UpdateHealthBar();
     }
 
-
+    public void UseItem(Item item)
+    {
+        item.OnUse(this);
+        SetHasActed(true);
+    }
     
     public IEnumerator SetPathAndWait(List<MapTileController> path)
     {
@@ -177,12 +183,22 @@ public class UnitController : MonoBehaviour
         SetPath(path);
 
         //Debug.Log("Animation Starting");
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", true);
+        }
+        
 
         while (!IsAnimationFin)
         {
             MoveAlongPath(gameObject);
             if(path.Count == 0)
             {
+                if (animator != null)
+                {
+                    animator.SetBool("isMoving", false);
+                }
+                
                 IsAnimationFin = true;
             }
             yield return null;
@@ -417,6 +433,7 @@ public class UnitController : MonoBehaviour
     public IEnumerator PlayMapAttackAnimationStart(UnitController defenderUnit)
     {
         IsAnimationFin = false;
+        float animationTime = 0;
         Vector3Int defenderLocation = defenderUnit.Location;
         Vector3 unitWorldLocation = gameManager.tileMapGrid.CellToWorld(Location);
         Vector3 defenderWorldLocation = gameManager.tileMapGrid.CellToWorld(defenderLocation);
@@ -443,17 +460,23 @@ public class UnitController : MonoBehaviour
             SoundManager.PlaySound(Define.SoundType.Physical, volume);      
         }
 
-
+        if (animator != null)
+        {
+            animator.SetInteger("attackOption", 1);
+            animationTime = animator.GetCurrentAnimatorStateInfo(0).length;
+        }
+        
         while (!IsAnimationFin)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetWorldLocation, step);
-
             if (Vector3.Distance(transform.position, targetWorldLocation) < 0.01f)
             {
                 IsAnimationFin = true;
             }
             yield return null;
         }
+
+        yield return new WaitForSeconds(Mathf.Max(0,animationTime));
 
         yield break;
     }
@@ -483,9 +506,20 @@ public class UnitController : MonoBehaviour
             {
                 IsAnimationFin = true;
             }
+
+            if (animator != null)
+            {
+                animator.SetInteger("attackOption", 0);
+            }
+
+
             yield return null;
         }
-
+        if (animator != null)
+        {
+            animator.SetInteger("attackOption", 0);
+        }
+        
         yield break;
     }
 

@@ -9,6 +9,7 @@ public class CharacterSO : ScriptableObject
     public int characterID;
     public ClassSO baseClass;
     public Sprite characterSprite;
+    public AnimatorOverrideController animatorOverrideController;
     public Define.UnitAllignment unitAllignment;
     public Define.AIType AIType;
     public Define.AIType SecondaryAIType;

@@ -36,7 +36,7 @@ public class ItemUseMenu : AbstractUnitMenu
     {
         if (buttonItem.IsUseable)
         {
-            buttonItem.OnUse(menuUnit);
+            menuUnit.UseItem(buttonItem);
             mainGameMenuManager.CloseAllMenus();
             GameManager.Instance.SetState(new PlayerTurnState(GameManager.Instance));
         }
