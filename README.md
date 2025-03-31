@@ -1,6 +1,9 @@
 # tactics-game
 prototype of a grid-based, turn-based tactics game, plays somewhat similar to Fire Emblem games. The art assets and UI of the project are temporary.
 
+I have decided to refactor the code into smaller self-contained units that I will create sepereate repos for. This will ensure no dependancy between the units, and allow for easier testing.
+The repo for the RPG segment of the code can be found here: https://github.com/Rahiro1/tactics-game-character, this comes with a sample unity project to show and test aspects of the stats system.
+
 Please feel free to play the prototype at https://play.unity.com/en/games/10c580e5-b18a-499c-b080-4f0043cf122b/tactics-rpg-prototype . Feedback is welcome. 
 
 This project is a work in progress and is primarily for me to practise coding a complete project and learn what to watch out for while doing so. It is based on the game series Fire Emblem but with enough distinct features to, I feel, be considered it's own game. 
