@@ -9,23 +9,23 @@ Please feel free to play the prototype at https://play.unity.com/en/games/10c580
 This project is a work in progress and is primarily for me to practise coding a complete project and learn what to watch out for while doing so. It is based on the game series Fire Emblem but with enough distinct features to, I feel, be considered it's own game. 
 
 Features
-•	Grid-based movement system with weighted range/pathfinding
-•	Statistics system with level ups, classes, equipment, and skills
-•	State machine to control input
-•	Combat and battle forecast
-•	AI system where the player can view a unit’s current AI , and how it will change
-•	Mouse interactivity for the grid 
-•	Menus with context dependant display
-•	Tooltips 
-•	Camera manual and automatic movement
-•	Customisable map events such as visiting houses and opening chests
-•	Multiple victory/ defeat conditions able to be ANDed or Ored
-•	Terrain with combat bonuses and different move costs for different unit types
-•	Shops
-•	Save/ load system to Json
-•	Settings
-•	Demo
-•	and more
+- Grid-based movement system with weighted range/pathfinding
+- Statistics system with level ups, classes, equipment, and skills
+- State machine to control input
+- Combat and battle forecast
+- AI system where the player can view a unit’s current AI , and how it will change
+-	Mouse interactivity for the grid 
+-  Menus with context dependant display
+-	Tooltips 
+-	Camera manual and automatic movement
+-	Customisable map events such as visiting houses and opening chests
+-	Multiple victory/ defeat conditions able to be ANDed or Ored
+-	Terrain with combat bonuses and different move costs for different unit types
+-	Shops
+-	Save/ load system to Json
+-	Settings
+-	Demo
+-	and more
 
 New Features
 - Armour system (reduces damage from physical attacks, but can be depleted by rending attacks)
